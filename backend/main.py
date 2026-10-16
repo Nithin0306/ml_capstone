@@ -491,5 +491,5 @@ if os.path.exists(FRONTEND_DIR):
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 8000))
     print(f"Starting ML Lab FastAPI Server on port {port}...")
-    uvicorn.run("main:app", host="0.0.0.0", port=port, reload=False)
+    uvicorn.run(app, host="0.0.0.0", port=port)
 
