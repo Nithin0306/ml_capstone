@@ -1,4 +1,17 @@
+# Virtual Environment
 .venv/
+
+# Python Cache
 __pycache__/
-*.pyc
+*.py[cod]
+
+# Jupyter Notebook Checkpoints
 .ipynb_checkpoints/
+
+# Frontend / Node Dependencies
+node_modules/
+dist/
+
+# Environment Variables & OS
+.env
+.DS_Store

@@ -1,0 +1,137 @@
+[
+  {
+    "track": "Classification",
+    "algorithm": "Random Forest (Tuned)",
+    "primary_metric": "ROC-AUC: 0.961",
+    "secondary_metric": "F1: 0.892",
+    "accuracy": "89.1%",
+    "status": "Best Model",
+    "phase": "Review 2"
+  },
+  {
+    "track": "Classification",
+    "algorithm": "Logistic Regression",
+    "primary_metric": "ROC-AUC: 0.960",
+    "secondary_metric": "F1: 0.889",
+    "accuracy": "89.1%",
+    "status": "Strong Baseline",
+    "phase": "Review 1"
+  },
+  {
+    "track": "Classification",
+    "algorithm": "Support Vector Machine (RBF)",
+    "primary_metric": "ROC-AUC: 0.930",
+    "secondary_metric": "F1: 0.865",
+    "accuracy": "86.9%",
+    "status": "Evaluated",
+    "phase": "Review 1"
+  },
+  {
+    "track": "Classification",
+    "algorithm": "Decision Tree",
+    "primary_metric": "ROC-AUC: 0.845",
+    "secondary_metric": "F1: 0.841",
+    "accuracy": "84.1%",
+    "status": "Evaluated",
+    "phase": "Review 1"
+  },
+  {
+    "track": "Classification",
+    "algorithm": "k-Nearest Neighbors (k=7)",
+    "primary_metric": "ROC-AUC: 0.887",
+    "secondary_metric": "F1: 0.848",
+    "accuracy": "84.8%",
+    "status": "Evaluated",
+    "phase": "Review 1"
+  },
+  {
+    "track": "Classification",
+    "algorithm": "Gaussian Naive Bayes",
+    "primary_metric": "ROC-AUC: 0.852",
+    "secondary_metric": "F1: 0.775",
+    "accuracy": "77.5%",
+    "status": "Evaluated",
+    "phase": "Review 1"
+  },
+  {
+    "track": "Clustering",
+    "algorithm": "K-Means (k=2)",
+    "primary_metric": "Silhouette: 0.3117",
+    "secondary_metric": "Calinski-H: 1997.1",
+    "accuracy": "DB: 1.394",
+    "status": "Best Model",
+    "phase": "Review 2"
+  },
+  {
+    "track": "Clustering",
+    "algorithm": "Agglomerative (Ward, k=2)",
+    "primary_metric": "Silhouette: 0.2132",
+    "secondary_metric": "Calinski-H: 1109.3",
+    "accuracy": "DB: 1.574",
+    "status": "Evaluated",
+    "phase": "Review 2"
+  },
+  {
+    "track": "Clustering",
+    "algorithm": "Agglomerative (Complete, k=2)",
+    "primary_metric": "Silhouette: 0.1758",
+    "secondary_metric": "Calinski-H: 223.8",
+    "accuracy": "DB: 4.465",
+    "status": "Evaluated",
+    "phase": "Review 2"
+  },
+  {
+    "track": "Clustering",
+    "algorithm": "Agglomerative (Average, k=2)",
+    "primary_metric": "Silhouette: 0.5070",
+    "secondary_metric": "Calinski-H: 46.7",
+    "accuracy": "DB: 0.724",
+    "status": "Collapsed Cluster",
+    "phase": "Review 2"
+  },
+  {
+    "track": "Regression",
+    "algorithm": "Random Forest Regressor",
+    "primary_metric": "R\u00b2: 0.985",
+    "secondary_metric": "RMSE: 0.982",
+    "accuracy": "MAE: 0.512",
+    "status": "Best Model",
+    "phase": "Review 2"
+  },
+  {
+    "track": "Regression",
+    "algorithm": "Gradient Boosting Regressor",
+    "primary_metric": "R\u00b2: 0.981",
+    "secondary_metric": "RMSE: 1.094",
+    "accuracy": "MAE: 0.598",
+    "status": "Evaluated",
+    "phase": "Review 2"
+  },
+  {
+    "track": "Regression",
+    "algorithm": "Ridge Regression",
+    "primary_metric": "R\u00b2: 0.942",
+    "secondary_metric": "RMSE: 1.841",
+    "accuracy": "MAE: 1.205",
+    "status": "Strong Linear",
+    "phase": "Review 1"
+  },
+  {
+    "track": "Regression",
+    "algorithm": "Lasso Regression",
+    "primary_metric": "R\u00b2: 0.938",
+    "secondary_metric": "RMSE: 1.912",
+    "accuracy": "MAE: 1.254",
+    "status": "Evaluated",
+    "phase": "Review 1"
+  },
+  {
+    "track": "Regression",
+    "algorithm": "Linear Regression",
+    "primary_metric": "R\u00b2: 0.942",
+    "secondary_metric": "RMSE: 1.841",
+    "accuracy": "MAE: 1.204",
+    "status": "Evaluated",
+    "phase": "Review 1"
+  }
+]
