@@ -297,11 +297,21 @@
               </p>
             </div>
 
-            <div class="table-filters">
-              <button class="filter-tab active" data-filter="all">All Tracks</button>
-              <button class="filter-tab" data-filter="Classification">Classification</button>
-              <button class="filter-tab" data-filter="Clustering">Clustering</button>
-              <button class="filter-tab" data-filter="Regression">Regression</button>
+            <div style="display: flex; gap: 10px; align-items: center;">
+              <div class="table-filters">
+                <button class="filter-tab active" data-filter="all">All Tracks</button>
+                <button class="filter-tab" data-filter="Classification">Classification</button>
+                <button class="filter-tab" data-filter="Clustering">Clustering</button>
+                <button class="filter-tab" data-filter="Regression">Regression</button>
+              </div>
+              <button class="filter-tab" id="exportCsvBtn" title="Download Benchmark Data (CSV)" style="display: flex; align-items: center; gap: 6px; background: rgba(255,255,255,0.08);">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                  <polyline points="7 10 12 15 17 10"></polyline>
+                  <line x1="12" y1="15" x2="12" y2="3"></line>
+                </svg>
+                <span>Export CSV</span>
+              </button>
             </div>
           </div>
 
@@ -404,56 +414,81 @@
 
   <!-- Modal 2: Clustering (UR3 Robot Telemetry Diagnostics) -->
   <div class="modal-overlay" id="clusteringModal">
-    <div class="modal-dialog">
+    <div class="modal-dialog" style="max-width: 920px;">
       <div class="modal-header">
         <div>
           <h3>UR3 Robotic Telemetry Diagnostics</h3>
-          <p style="font-size: 12px; color: var(--text-muted);">Unsupervised K-Means & 2D PCA Anomaly Projection</p>
+          <p style="font-size: 12px; color: var(--text-muted);">Unsupervised K-Means & Real-time 2D PCA Cluster Projection (Review 2 Rubric B1, B3)</p>
         </div>
         <button class="modal-close" data-close="clusteringModal">&times;</button>
       </div>
 
-      <div class="preset-btn-bar">
-        <span style="font-size: 12px; color: var(--text-muted); align-self: center;">Telemetry Presets:</span>
-        <button class="preset-btn" id="presetRobotNormal">🟢 Baseline Routine Motion</button>
-        <button class="preset-btn" id="presetRobotStress">🔴 High-Torque Stress Cycle</button>
-      </div>
+      <div class="modal-split-layout">
+        <div class="modal-form-col">
+          <div class="preset-btn-bar">
+            <span style="font-size: 12px; color: var(--text-muted); align-self: center;">Presets:</span>
+            <button class="preset-btn" id="presetRobotNormal">🟢 Baseline Motion</button>
+            <button class="preset-btn" id="presetRobotStress">🔴 High-Torque Stress</button>
+          </div>
 
-      <form id="robotTelemetryForm">
-        <div class="form-grid">
-          <div class="form-group">
-            <label>Base Joint Current (Current_J0, A)</label>
-            <input type="number" id="currJ0" step="0.1" value="-0.5">
-          </div>
-          <div class="form-group">
-            <label>Shoulder Joint Current (Current_J1, A)</label>
-            <input type="number" id="currJ1" step="0.1" value="-1.2">
-          </div>
-          <div class="form-group">
-            <label>Elbow Joint Current (Current_J2, A)</label>
-            <input type="number" id="currJ2" step="0.1" value="0.8">
-          </div>
-          <div class="form-group">
-            <label>Tool Current (Tool_current, A)</label>
-            <input type="number" id="toolCurr" step="0.05" value="0.2">
-          </div>
-          <div class="form-group">
-            <label>Base Angular Speed (Speed_J0, rad/s)</label>
-            <input type="number" id="speedJ0" step="0.05" value="0.15">
-          </div>
-          <div class="form-group">
-            <label>Joint Temperature T0 (°C)</label>
-            <input type="number" id="tempT0" step="0.5" value="42.0">
+          <form id="robotTelemetryForm">
+            <div class="form-grid">
+              <div class="form-group">
+                <label>Base Current (Current_J0, A)</label>
+                <input type="number" id="currJ0" step="0.1" value="-0.5">
+              </div>
+              <div class="form-group">
+                <label>Shoulder Current (Current_J1, A)</label>
+                <input type="number" id="currJ1" step="0.1" value="-1.2">
+              </div>
+              <div class="form-group">
+                <label>Elbow Current (Current_J2, A)</label>
+                <input type="number" id="currJ2" step="0.1" value="0.8">
+              </div>
+              <div class="form-group">
+                <label>Tool Current (Tool_current, A)</label>
+                <input type="number" id="toolCurr" step="0.05" value="0.2">
+              </div>
+              <div class="form-group">
+                <label>Base Speed (Speed_J0, rad/s)</label>
+                <input type="number" id="speedJ0" step="0.05" value="0.15">
+              </div>
+              <div class="form-group">
+                <label>Joint Temp T0 (°C)</label>
+                <input type="number" id="tempT0" step="0.5" value="42.0">
+              </div>
+            </div>
+
+            <button type="submit" class="btn-predict">
+              Diagnose Operating Cluster & Hazard Risk
+            </button>
+          </form>
+
+          <div class="inference-result-box" id="robotResultBox">
+            <!-- Result rendered by app.js -->
           </div>
         </div>
 
-        <button type="submit" class="btn-predict">
-          Diagnose Operating Cluster & Hazard Risk
-        </button>
-      </form>
-
-      <div class="inference-result-box" id="robotResultBox">
-        <!-- Result rendered by app.js -->
+        <!-- Right: Real-time 2D PCA Cluster Map Canvas -->
+        <div class="modal-viz-col">
+          <div class="pca-map-card">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+              <span style="font-size: 12px; font-weight: 700; color: #fff; text-transform: uppercase;">2D PCA Cluster Map (UR3 Sensor Subspace)</span>
+              <span style="font-size: 11px; color: var(--accent-amber); font-weight: 600;">PC1+PC2: 48.0%</span>
+            </div>
+            <div class="pca-canvas-container">
+              <canvas id="pcaClusterCanvas" width="400" height="280"></canvas>
+            </div>
+            <div class="pca-legend">
+              <div class="pca-legend-item"><span class="legend-dot" style="background: #ff7a3d;"></span> Cluster 0: Hazard Risk (4.76%)</div>
+              <div class="pca-legend-item"><span class="legend-dot" style="background: #06b6d4;"></span> Cluster 1: Baseline Motion (1.95%)</div>
+              <div class="pca-legend-item"><span class="legend-dot pulse-target" style="background: #ffffff;"></span> ★ Current Telemetry</div>
+            </div>
+            <p style="font-size: 11px; color: var(--text-muted); line-height: 1.5; margin-top: 10px;">
+              Points represent 593 preprocessed robot cycles. The pulsating star indicates the real-time PCA projection of your current inputs.
+            </p>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -504,6 +539,23 @@
 
       <div class="inference-result-box" id="regressionResultBox">
         <!-- Result rendered by app.js -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal 4: Model Deep-Dive Inspection Drawer -->
+  <div class="modal-overlay" id="modelDetailsModal">
+    <div class="modal-dialog" style="max-width: 720px;">
+      <div class="modal-header">
+        <div>
+          <h3 id="detailModelTitle">Model Architecture & Diagnostics</h3>
+          <p id="detailModelTrack" style="font-size: 12px; color: var(--text-muted);">Track Details</p>
+        </div>
+        <button class="modal-close" data-close="modelDetailsModal">&times;</button>
+      </div>
+
+      <div id="detailModelBody">
+        <!-- Dynamically rendered by app.js -->
       </div>
     </div>
   </div>

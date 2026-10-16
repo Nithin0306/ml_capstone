@@ -6,7 +6,7 @@ import pandas as pd
 from http.server import HTTPServer, SimpleHTTPRequestHandler
 import urllib.parse
 
-PORT = 8000
+PORT = int(os.environ.get("PORT", 8000))
 MODELS_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "models")
 
 print(f"Loading models from: {MODELS_DIR}...")
