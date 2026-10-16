@@ -2,56 +2,92 @@
   {
     "track": "Classification",
     "algorithm": "Random Forest (Tuned)",
-    "primary_metric": "ROC-AUC: 0.961",
-    "secondary_metric": "F1: 0.892",
-    "accuracy": "89.1%",
+    "primary_metric": "ROC-AUC: 0.967",
+    "secondary_metric": "F1: 0.913",
+    "accuracy": "91.3%",
     "status": "Best Model",
-    "phase": "Review 2"
+    "phase": "Review 2 Complete"
   },
   {
     "track": "Classification",
     "algorithm": "Logistic Regression",
-    "primary_metric": "ROC-AUC: 0.960",
-    "secondary_metric": "F1: 0.889",
-    "accuracy": "89.1%",
-    "status": "Strong Baseline",
-    "phase": "Review 1"
+    "primary_metric": "ROC-AUC: 0.962",
+    "secondary_metric": "F1: 0.869",
+    "accuracy": "87.0%",
+    "status": "Evaluated",
+    "phase": "Review 2 Complete"
   },
   {
     "track": "Classification",
     "algorithm": "Support Vector Machine (RBF)",
-    "primary_metric": "ROC-AUC: 0.930",
-    "secondary_metric": "F1: 0.865",
-    "accuracy": "86.9%",
+    "primary_metric": "ROC-AUC: 0.951",
+    "secondary_metric": "F1: 0.877",
+    "accuracy": "87.7%",
     "status": "Evaluated",
-    "phase": "Review 1"
+    "phase": "Review 2 Complete"
   },
   {
     "track": "Classification",
     "algorithm": "Decision Tree",
-    "primary_metric": "ROC-AUC: 0.845",
-    "secondary_metric": "F1: 0.841",
-    "accuracy": "84.1%",
+    "primary_metric": "ROC-AUC: 0.953",
+    "secondary_metric": "F1: 0.877",
+    "accuracy": "87.7%",
     "status": "Evaluated",
-    "phase": "Review 1"
+    "phase": "Review 2 Complete"
   },
   {
     "track": "Classification",
     "algorithm": "k-Nearest Neighbors (k=7)",
-    "primary_metric": "ROC-AUC: 0.887",
-    "secondary_metric": "F1: 0.848",
-    "accuracy": "84.8%",
+    "primary_metric": "ROC-AUC: 0.951",
+    "secondary_metric": "F1: 0.927",
+    "accuracy": "92.8%",
     "status": "Evaluated",
-    "phase": "Review 1"
+    "phase": "Review 2 Complete"
   },
   {
     "track": "Classification",
     "algorithm": "Gaussian Naive Bayes",
-    "primary_metric": "ROC-AUC: 0.852",
-    "secondary_metric": "F1: 0.775",
-    "accuracy": "77.5%",
+    "primary_metric": "ROC-AUC: 0.918",
+    "secondary_metric": "F1: 0.753",
+    "accuracy": "76.8%",
     "status": "Evaluated",
-    "phase": "Review 1"
+    "phase": "Review 2 Complete"
+  },
+  {
+    "track": "Classification",
+    "algorithm": "AdaBoost Classifier",
+    "primary_metric": "ROC-AUC: 0.955",
+    "secondary_metric": "F1: 0.869",
+    "accuracy": "87.0%",
+    "status": "Evaluated",
+    "phase": "Review 2 Complete"
+  },
+  {
+    "track": "Classification",
+    "algorithm": "Gradient Boosting Classifier",
+    "primary_metric": "ROC-AUC: 0.948",
+    "secondary_metric": "F1: 0.87",
+    "accuracy": "87.0%",
+    "status": "Evaluated",
+    "phase": "Review 2 Complete"
+  },
+  {
+    "track": "Classification",
+    "algorithm": "Bagging Classifier",
+    "primary_metric": "ROC-AUC: 0.958",
+    "secondary_metric": "F1: 0.884",
+    "accuracy": "88.4%",
+    "status": "Evaluated",
+    "phase": "Review 2 Complete"
+  },
+  {
+    "track": "Classification",
+    "algorithm": "MLP Neural Network Classifier",
+    "primary_metric": "ROC-AUC: 0.912",
+    "secondary_metric": "F1: 0.833",
+    "accuracy": "83.3%",
+    "status": "Evaluated",
+    "phase": "Review 2 Complete"
   },
   {
     "track": "Clustering",
@@ -109,6 +145,42 @@
   },
   {
     "track": "Regression",
+    "algorithm": "Support Vector Regression (SVR)",
+    "primary_metric": "R\u00b2: 0.956",
+    "secondary_metric": "RMSE: 1.620",
+    "accuracy": "MAE: 0.985",
+    "status": "Evaluated",
+    "phase": "Review 2"
+  },
+  {
+    "track": "Regression",
+    "algorithm": "K-Nearest Neighbors Regressor",
+    "primary_metric": "R\u00b2: 0.951",
+    "secondary_metric": "RMSE: 1.710",
+    "accuracy": "MAE: 1.042",
+    "status": "Evaluated",
+    "phase": "Review 2"
+  },
+  {
+    "track": "Regression",
+    "algorithm": "Decision Tree Regressor",
+    "primary_metric": "R\u00b2: 0.948",
+    "secondary_metric": "RMSE: 1.758",
+    "accuracy": "MAE: 1.112",
+    "status": "Evaluated",
+    "phase": "Review 1"
+  },
+  {
+    "track": "Regression",
+    "algorithm": "Linear Regression",
+    "primary_metric": "R\u00b2: 0.942",
+    "secondary_metric": "RMSE: 1.841",
+    "accuracy": "MAE: 1.204",
+    "status": "Evaluated",
+    "phase": "Review 1"
+  },
+  {
+    "track": "Regression",
     "algorithm": "Ridge Regression",
     "primary_metric": "R\u00b2: 0.942",
     "secondary_metric": "RMSE: 1.841",
@@ -127,10 +199,19 @@
   },
   {
     "track": "Regression",
-    "algorithm": "Linear Regression",
-    "primary_metric": "R\u00b2: 0.942",
-    "secondary_metric": "RMSE: 1.841",
-    "accuracy": "MAE: 1.204",
+    "algorithm": "ElasticNet",
+    "primary_metric": "R\u00b2: 0.935",
+    "secondary_metric": "RMSE: 1.954",
+    "accuracy": "MAE: 1.289",
+    "status": "Evaluated",
+    "phase": "Review 1"
+  },
+  {
+    "track": "Regression",
+    "algorithm": "Polynomial Regression (Degree 2)",
+    "primary_metric": "R\u00b2: 0.962",
+    "secondary_metric": "RMSE: 1.512",
+    "accuracy": "MAE: 0.942",
     "status": "Evaluated",
     "phase": "Review 1"
   }

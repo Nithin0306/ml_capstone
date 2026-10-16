@@ -3,52 +3,66 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>23CSE301 ML Capstone — Intelligence & Inference Dashboard</title>
+  <title>ML Lab — Interactive Machine Learning Platform</title>
   
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   
   <!-- Stylesheet -->
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-  <div class="app-shell">
+  <div class="app-layout">
     
-    <!-- Left Slim Icon Dock -->
-    <aside class="side-dock">
-      <div class="dock-logo" id="logoBtn" title="23CSE301 ML Capstone">
-        <!-- Abstract Cube / Neural Logo SVG -->
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
-        </svg>
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-brand">
+        <div class="brand-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+            <polyline points="2 17 12 22 22 17"></polyline>
+            <polyline points="2 12 12 17 22 12"></polyline>
+          </svg>
+        </div>
+        <div class="brand-text">
+          <h2>ML Lab</h2>
+          <span>Capstone Platform</span>
+        </div>
       </div>
 
-      <nav class="dock-nav">
-        <!-- Overview / Dashboard -->
-        <button class="dock-btn active" data-view="dashboard" data-tooltip="Dashboard Overview">
+      <nav class="sidebar-nav">
+        <a href="#/" class="nav-item active" data-route="overview">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <rect x="3" y="3" width="7" height="9" rx="1.5"></rect>
-            <rect x="14" y="3" width="7" height="5" rx="1.5"></rect>
-            <rect x="14" y="12" width="7" height="9" rx="1.5"></rect>
-            <rect x="3" y="16" width="7" height="5" rx="1.5"></rect>
+            <rect x="3" y="3" width="7" height="9" rx="1"></rect>
+            <rect x="14" y="3" width="7" height="5" rx="1"></rect>
+            <rect x="14" y="12" width="7" height="9" rx="1"></rect>
+            <rect x="3" y="16" width="7" height="5" rx="1"></rect>
           </svg>
-        </button>
+          <span>Overview</span>
+        </a>
 
-        <!-- Classification Track -->
-        <button class="dock-btn" data-action="open-classification" data-tooltip="Credit Approval (Random Forest)">
+        <a href="#/regression" class="nav-item" data-route="regression">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+          </svg>
+          <span>Regression Lab</span>
+          <span class="nav-badge">10</span>
+        </a>
+
+        <a href="#/classification" class="nav-item" data-route="classification">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
             <line x1="1" y1="10" x2="23" y2="10"></line>
             <circle cx="6" cy="15" r="1"></circle>
           </svg>
-          <span class="badge-dot"></span>
-        </button>
+          <span>Classification Lab</span>
+          <span class="nav-badge">10</span>
+        </a>
 
-        <!-- Clustering Track -->
-        <button class="dock-btn" data-action="open-clustering" data-tooltip="UR3 Robot Diagnostics (K-Means)">
+        <a href="#/clustering" class="nav-item" data-route="clustering">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <circle cx="18" cy="5" r="3"></circle>
             <circle cx="6" cy="12" r="3"></circle>
@@ -56,527 +70,1639 @@
             <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
             <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
           </svg>
-        </button>
+          <span>Clustering Lab</span>
+          <span class="nav-badge">2</span>
+        </a>
 
-        <!-- Regression Track -->
-        <button class="dock-btn" data-action="open-regression" data-tooltip="Air Quality Regressor">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
-          </svg>
-        </button>
+        <div class="nav-divider"></div>
 
-        <!-- Leaderboard Table -->
-        <button class="dock-btn" data-action="scroll-leaderboard" data-tooltip="Benchmark Leaderboard">
+        <a href="#/compare" class="nav-item" data-route="compare">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <line x1="18" y1="20" x2="18" y2="10"></line>
             <line x1="12" y1="20" x2="12" y2="4"></line>
             <line x1="6" y1="20" x2="6" y2="14"></line>
           </svg>
-        </button>
+          <span>Compare Models</span>
+        </a>
+
+        <a href="#/datasets" class="nav-item" data-route="datasets">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+          </svg>
+          <span>Dataset Explorer</span>
+        </a>
       </nav>
 
-      <div class="dock-footer">
-        <!-- Live API Server Status Indicator -->
-        <button class="dock-btn" id="statusIndicatorBtn" data-tooltip="Backend: Checking...">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
-            <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
-          </svg>
-          <span class="badge-dot" id="serverLiveDot" style="background: #10b981; box-shadow: 0 0 8px #10b981;"></span>
-        </button>
-
-        <!-- Info / About -->
-        <button class="dock-btn" id="infoBtn" data-tooltip="System Info">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="12" cy="12" r="10"></circle>
-            <line x1="12" y1="16" x2="12" y2="12"></line>
-            <line x1="12" y1="8" x2="12.01" y2="8"></line>
-          </svg>
-        </button>
+      <div class="sidebar-footer">
+        <div class="system-status-pill">
+          <span class="status-dot live" id="systemStatusDot"></span>
+          <div class="status-info">
+            <span class="status-label">Backend Online</span>
+            <small id="systemStatusText">FastAPI Port 8000</small>
+          </div>
+        </div>
+        <div class="capstone-tag">
+          <span>23CSE301 Capstone</span>
+          <small>Amrita School of Computing</small>
+        </div>
       </div>
     </aside>
 
-    <!-- Main Content Area -->
-    <main class="main-wrapper">
+    <!-- Main Workspace Container -->
+    <main class="main-content">
       
-      <!-- Top Navigation Header -->
-      <header class="top-header">
-        <div class="header-title-block">
-          <h1>ML Capstone Intelligence</h1>
-          <p>
-            <span>Review 2 Production Models</span>
-            <span>•</span>
-            <span style="color: var(--accent-emerald);">Live Inferences Ready</span>
-          </p>
+      <!-- Top Application Header -->
+      <header class="app-header">
+        <div class="header-left">
+          <button class="menu-toggle-btn" id="menuToggleBtn" title="Toggle Navigation">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="3" y1="12" x2="21" y2="12"></line>
+              <line x1="3" y1="6" x2="21" y2="6"></line>
+              <line x1="3" y1="18" x2="21" y2="18"></line>
+            </svg>
+          </button>
+          <div class="header-breadcrumbs">
+            <span class="root-crumb">ML Lab</span>
+            <span class="crumb-separator">/</span>
+            <span class="active-crumb" id="currentCrumb">Overview</span>
+          </div>
         </div>
 
         <div class="header-actions">
-          <div class="search-box">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <div class="search-input-wrapper">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <circle cx="11" cy="11" r="8"></circle>
               <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
             </svg>
-            <input type="text" id="modelSearchInput" placeholder="Search algorithms...">
+            <input type="text" id="globalSearchInput" placeholder="Search algorithms (RF, SVM, SVR...)" autocomplete="off">
           </div>
 
-          <button class="icon-circle-btn" id="notificationsBtn" title="System Alerts">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
-              <polyline points="22,6 12,13 2,6"></polyline>
-            </svg>
-          </button>
-
-          <div class="profile-pill" title="Amrita School of Computing">
-            <div class="avatar-badge">ML</div>
-            <div class="profile-info">
-              <span>Capstone Team 3</span>
-              <small>23CSE301 Group</small>
+          <div class="header-badge-group">
+            <span class="badge accent-badge">Review 2 Environment</span>
+            <div class="user-pill" title="Capstone Project Pair Programming">
+              <div class="user-avatar">ML</div>
+              <span>Capstone Team</span>
             </div>
           </div>
         </div>
       </header>
 
-      <!-- Dashboard Main Grid -->
-      <div class="dashboard-grid">
-        
-        <!-- Hero Showcase Card -->
-        <section class="glass-card hero-card">
-          <!-- Background Geometric Neural Rings -->
-          <svg class="hero-rings" viewBox="0 0 100 100">
-            <circle cx="50" cy="50" r="46"/>
-            <circle cx="50" cy="50" r="34" stroke-dasharray="4 3"/>
-            <circle cx="50" cy="50" r="22"/>
-          </svg>
-
-          <div class="hero-content">
-            <div class="pill-tag">
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-              </svg>
-              Review 2 Production Models
-            </div>
-
-            <h2 class="hero-title">Optimize Your Predictions</h2>
-            <p class="hero-desc">
-              Integrated multi-track ML pipelines for Credit Approval Classification (Tuned Random Forest), UR3 Robotic Telemetry Diagnostics (K-Means & PCA), and Air Quality Regression.
-            </p>
-
-            <div style="display: flex; gap: 12px; align-items: center;">
-              <button class="hero-cta-btn" id="heroStartBtn">
-                <span>Run Live Inference</span>
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                  <line x1="5" y1="12" x2="19" y2="12"></line>
-                  <polyline points="12 5 19 12 12 19"></polyline>
-                </svg>
-              </button>
-
-              <button class="filter-tab" id="viewDocsBtn" style="padding: 12px 20px;">
-                Documentation
-              </button>
-            </div>
+      <!-- VIEW 1: OVERVIEW / ML COMMAND CENTER -->
+      <section class="page-view active" id="view-overview">
+        <div class="view-header">
+          <div class="hero-intro">
+            <span class="track-tag">Platform Hub</span>
+            <h1>ML Command Center</h1>
+            <p>Unified experimentation, inference, and diagnostic studio spanning three machine learning disciplines.</p>
           </div>
-
-          <!-- Floating Frosted-Glass Metric Bar -->
-          <div class="hero-stats-glass-bar">
-            <div class="stat-item">
-              <div class="stat-val" id="metricRocAuc">96.2%</div>
-              <div class="stat-label">
-                <span class="stat-dot cyan"></span>
-                <span>ROC-AUC (RF)</span>
-              </div>
-            </div>
-
-            <div class="stat-item">
-              <div class="stat-val" id="metricSilhouette">0.312</div>
-              <div class="stat-label">
-                <span class="stat-dot pink"></span>
-                <span>Silhouette (KM)</span>
-              </div>
-            </div>
-
-            <div class="stat-item">
-              <div class="stat-val" id="metricR2">0.999</div>
-              <div class="stat-label">
-                <span class="stat-dot amber"></span>
-                <span>R² Score (Reg)</span>
-              </div>
-            </div>
-
-            <div class="stat-item">
-              <div class="stat-val">22</div>
-              <div class="stat-label">
-                <span class="stat-dot emerald"></span>
-                <span>Evaluated Models</span>
-              </div>
-            </div>
-
-            <button class="stat-action-btn" id="statCycleBtn" title="Cycle Metric Views">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                <polyline points="9 18 15 12 9 6"></polyline>
-              </svg>
-            </button>
+          <div class="quick-links">
+            <a href="#/compare" class="btn btn-secondary">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+              Benchmark Studio
+            </a>
+            <a href="#/datasets" class="btn btn-secondary">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+              View Datasets
+            </a>
           </div>
-        </section>
+        </div>
 
-        <!-- Right Side Analytics Cards -->
-        <aside class="right-column">
+        <!-- 3 Large Track Cards -->
+        <div class="track-cards-grid">
           
-          <!-- Card 1: Active Users / Model Inference Confidence -->
-          <div class="glass-card analytics-card">
-            <div class="card-header-row">
-              <h3>
-                <span>Model Confidence Trend</span>
-                <span style="font-size: 14px;">💡</span>
-              </h3>
-              <span style="font-size: 12px; color: var(--text-muted);">5-Fold CV</span>
+          <!-- Regression Track Card -->
+          <div class="track-card">
+            <div class="track-card-header">
+              <div class="track-icon regression-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+              </div>
+              <span class="track-pill">Supervised Continuous</span>
             </div>
-
-            <div class="chart-container">
-              <canvas id="confidenceSparklineCanvas"></canvas>
-              <div class="chart-badge">
-                <span style="color: var(--accent-amber);">●</span>
-                <span>98.4% Peak</span>
+            <div class="track-card-body">
+              <h3>Regression Lab</h3>
+              <p class="track-subtitle">Predict continuous values</p>
+              <p class="track-desc">Air quality environmental simulator predicting benzene concentration C6H6(GT) with 10 regressors, What-If simulator, and residual diagnostics.</p>
+              
+              <div class="track-meta">
+                <div class="meta-item">
+                  <small>Dataset</small>
+                  <strong>UCI Air Quality</strong>
+                </div>
+                <div class="meta-item">
+                  <small>Algorithms</small>
+                  <strong>10 Evaluated</strong>
+                </div>
+                <div class="meta-item">
+                  <small>Top Model</small>
+                  <strong class="text-accent">Random Forest (R² 0.985)</strong>
+                </div>
               </div>
             </div>
-
-            <div style="display: flex; justify-content: space-between; font-size: 11px; color: var(--text-muted); margin-top: 10px;">
-              <span>Fold 1</span>
-              <span>Fold 2</span>
-              <span>Fold 3</span>
-              <span>Fold 4</span>
-              <span>Fold 5</span>
+            <div class="track-card-footer">
+              <a href="#/regression" class="btn btn-primary btn-block">
+                Enter Regression Lab →
+              </a>
             </div>
           </div>
 
-          <!-- Card 2: Latest Sales / Robot Hazard Index -->
-          <div class="glass-card analytics-card">
-            <div class="card-header-row">
-              <h3>
-                <span>Safety Stress Index</span>
-              </h3>
-              <div class="hazard-gain-pill warning">
-                <span>▲ 2.4× Hazard Ratio</span>
+          <!-- Classification Track Card -->
+          <div class="track-card">
+            <div class="track-card-header">
+              <div class="track-icon classification-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect><line x1="1" y1="10" x2="23" y2="10"></line><circle cx="6" cy="15" r="1"></circle></svg>
+              </div>
+              <span class="track-pill">Supervised Binary</span>
+            </div>
+            <div class="track-card-body">
+              <h3>Classification Lab</h3>
+              <p class="track-subtitle">Predict categories</p>
+              <p class="track-desc">Educational credit approval evaluator comparing 10 classifiers (6 active, 4 in development), side-by-side Model Face-Off, and ROC curves.</p>
+              
+              <div class="track-meta">
+                <div class="meta-item">
+                  <small>Dataset</small>
+                  <strong>UCI Credit Approval</strong>
+                </div>
+                <div class="meta-item">
+                  <small>Algorithms</small>
+                  <strong>10 Classifiers</strong>
+                </div>
+                <div class="meta-item">
+                  <small>Top Model</small>
+                  <strong class="text-accent">Random Forest (89.1% Acc)</strong>
+                </div>
               </div>
             </div>
+            <div class="track-card-footer">
+              <a href="#/classification" class="btn btn-primary btn-block">
+                Enter Classification Lab →
+              </a>
+            </div>
+          </div>
 
-            <div class="hazard-card-content">
-              <div class="hazard-metric-group">
-                <div class="hazard-big-val">4.76%</div>
-                <div class="hazard-subtext">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
-                    <line x1="12" y1="9" x2="12" y2="13"></line>
-                    <line x1="12" y1="17" x2="12.01" y2="17"></line>
-                  </svg>
-                  <span>Cluster 0 Protective Stop Rate</span>
+          <!-- Clustering Track Card -->
+          <div class="track-card">
+            <div class="track-card-header">
+              <div class="track-icon clustering-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line></svg>
+              </div>
+              <span class="track-pill">Unsupervised Discovery</span>
+            </div>
+            <div class="track-card-body">
+              <h3>Clustering Lab</h3>
+              <p class="track-subtitle">Discover hidden groups</p>
+              <p class="track-desc">UR3 robot telemetry cluster playground. Interactive K-Means and Hierarchical Dendrogram, PCA & t-SNE 2D projections, and 2.44x safety hazard validation.</p>
+              
+              <div class="track-meta">
+                <div class="meta-item">
+                  <small>Dataset</small>
+                  <strong>UR3 Robotic Telemetry</strong>
+                </div>
+                <div class="meta-item">
+                  <small>Algorithms</small>
+                  <strong>K-Means & Hierarchical</strong>
+                </div>
+                <div class="meta-item">
+                  <small>Hazard Discovery</small>
+                  <strong class="text-accent">2.44x Stop Hazard Ratio</strong>
+                </div>
+              </div>
+            </div>
+            <div class="track-card-footer">
+              <a href="#/clustering" class="btn btn-primary btn-block">
+                Enter Clustering Lab →
+              </a>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Metrics Showcase Row -->
+        <div class="metrics-summary-grid">
+          <div class="metric-card">
+            <div class="metric-card-top">
+              <span class="metric-title">Regression Benchmark (R²)</span>
+              <span class="metric-badge-good">Best In Track</span>
+            </div>
+            <div class="metric-value-huge text-accent">0.985</div>
+            <div class="metric-subtext">Random Forest Regressor (RMSE: 0.982 μg/m³)</div>
+          </div>
+
+          <div class="metric-card">
+            <div class="metric-card-top">
+              <span class="metric-title">Classification ROC-AUC</span>
+              <span class="metric-badge-good">Best In Track</span>
+            </div>
+            <div class="metric-value-huge text-accent">0.961</div>
+            <div class="metric-subtext">Random Forest Classifier (Accuracy: 89.1%, F1: 0.892)</div>
+          </div>
+
+          <div class="metric-card">
+            <div class="metric-card-top">
+              <span class="metric-title">Clustering Silhouette Score</span>
+              <span class="metric-badge-good">Optimal (k=2)</span>
+            </div>
+            <div class="metric-value-huge text-accent">0.3117</div>
+            <div class="metric-subtext">K-Means on 19 Sensor Signals (Calinski-H: 1997.1)</div>
+          </div>
+
+          <div class="metric-card">
+            <div class="metric-card-top">
+              <span class="metric-title">Unsupervised Hazard Ratio</span>
+              <span class="metric-badge-good">Post-Hoc Validated</span>
+            </div>
+            <div class="metric-value-huge text-accent">2.44×</div>
+            <div class="metric-subtext">Cluster 0 (4.76% Stops) vs Cluster 1 (1.95% Stops)</div>
+          </div>
+        </div>
+
+        <!-- Quick Start Workflow & Recent Experiments -->
+        <div class="overview-split-grid">
+          
+          <!-- Quick Start Guide -->
+          <div class="panel-card">
+            <div class="panel-card-header">
+              <h3>Interactive Workflow Guide</h3>
+              <span class="badge">4 Steps</span>
+            </div>
+            <div class="workflow-steps">
+              <div class="step-item">
+                <div class="step-number">1</div>
+                <div class="step-content">
+                  <strong>Select ML Discipline</strong>
+                  <p>Choose Regression (continuous), Classification (categories), or Clustering (unsupervised).</p>
+                </div>
+              </div>
+              <div class="step-item">
+                <div class="step-number">2</div>
+                <div class="step-content">
+                  <strong>Choose Algorithm or Configure Parameters</strong>
+                  <p>Switch between linear/tree models, adjust K value, or link parameters.</p>
+                </div>
+              </div>
+              <div class="step-item">
+                <div class="step-number">3</div>
+                <div class="step-content">
+                  <strong>Run Live Inference or Experiment</strong>
+                  <p>Submit custom sensor readings, credit applications, or trigger clustering recomputation.</p>
+                </div>
+              </div>
+              <div class="step-item">
+                <div class="step-number">4</div>
+                <div class="step-content">
+                  <strong>Inspect Diagnostics & Interpret Drivers</strong>
+                  <p>Analyze residual plots, confusion matrices, ROC curves, and feature importance drivers.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Recent Experiments Feed -->
+          <div class="panel-card">
+            <div class="panel-card-header">
+              <h3>Recent Experiment Artifacts</h3>
+              <span class="badge">Session Log</span>
+            </div>
+            <div class="table-responsive">
+              <table class="data-table" id="recentExperimentsTable">
+                <thead>
+                  <tr>
+                    <th>Run ID</th>
+                    <th>Track</th>
+                    <th>Model / Configuration</th>
+                    <th>Primary Metric</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody id="recentExperimentsBody">
+                  <tr>
+                    <td colspan="5" class="text-center text-muted">Loading experiments...</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- VIEW 2: REGRESSION LAB -->
+      <section class="page-view" id="view-regression">
+        <div class="lab-header">
+          <div class="lab-title-group">
+            <div class="lab-badge regression-badge">Regression Track</div>
+            <h1>Pollution Prediction Simulator</h1>
+            <p>UCI Air Quality continuous environmental task predicting Ground-Truth Benzene <code>C6H6(GT)</code> in μg/m³.</p>
+          </div>
+
+          <div class="model-selector-bar">
+            <label for="regModelSelect">Active Regressor:</label>
+            <select id="regModelSelect" class="form-select">
+              <option value="random_forest" selected>Random Forest Regressor (Best: R² 0.985)</option>
+              <option value="gradient_boosting">Gradient Boosting Regressor (R² 0.981)</option>
+              <option value="svr">Support Vector Regression SVR (R² 0.956)</option>
+              <option value="knn">K-Nearest Neighbors Regressor (R² 0.951)</option>
+              <option value="decision_tree">Decision Tree Regressor (R² 0.948)</option>
+              <option value="linear_regression">Linear Regression (R² 0.942)</option>
+              <option value="ridge">Ridge Regression (R² 0.942)</option>
+              <option value="lasso">Lasso Regression (R² 0.938)</option>
+              <option value="elastic_net">ElasticNet (R² 0.935)</option>
+              <option value="polynomial">Polynomial Regression Deg 2 (R² 0.962)</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Regression Tabs -->
+        <div class="tab-bar">
+          <button class="tab-btn active" data-tab="reg-predict">1. Predict (What-If Simulator)</button>
+          <button class="tab-btn" data-tab="reg-compare">2. Compare Models</button>
+          <button class="tab-btn" data-tab="reg-diagnostics">3. Diagnostics</button>
+          <button class="tab-btn" data-tab="reg-features">4. Feature Insights</button>
+        </div>
+
+        <!-- TAB 1: Predict & What-If Simulator -->
+        <div class="tab-content active" id="tab-reg-predict">
+          
+          <div class="simulator-layout">
+            
+            <!-- Input Form Panel -->
+            <div class="panel-card">
+              <div class="panel-card-header">
+                <div>
+                  <h3>Environmental Sensor Inputs</h3>
+                  <small class="text-muted">Adjust sensor readings to simulate air pollution conditions.</small>
+                </div>
+                <div class="preset-buttons">
+                  <button class="btn btn-xs" id="presetCleanBtn">Clean Urban</button>
+                  <button class="btn btn-xs" id="presetRushBtn">Rush Hour Peak</button>
+                  <button class="btn btn-xs" id="presetIndustrialBtn">Industrial</button>
                 </div>
               </div>
 
-              <!-- 3D Sensor Visual Asset Preview -->
-              <div class="asset-preview-box" id="robotAssetBox" title="Click to view UR3 Telemetry Diagnostics">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-                  <rect x="4" y="4" width="16" height="16" rx="3"></rect>
-                  <circle cx="9" cy="9" r="1.5"></circle>
-                  <circle cx="15" cy="9" r="1.5"></circle>
-                  <path d="M9 15h6"></path>
-                </svg>
-                <span>UR3 Sensor</span>
+              <div class="form-grid" id="regFormGrid">
+                <!-- Dynamically populated or default controls -->
+                <div class="form-group">
+                  <label for="input_CO_GT">CO(GT) — Carbon Monoxide (mg/m³)</label>
+                  <div class="slider-input-combo">
+                    <input type="range" id="input_CO_GT_range" min="0.1" max="11.9" step="0.1" value="2.2">
+                    <input type="number" id="input_CO_GT" min="0.1" max="11.9" step="0.1" value="2.2">
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label for="input_PT08_S1">PT08.S1 — Tin Oxide (CO sensor)</label>
+                  <div class="slider-input-combo">
+                    <input type="range" id="input_PT08_S1_range" min="647" max="2040" step="1" value="1097">
+                    <input type="number" id="input_PT08_S1" min="647" max="2040" step="1" value="1097">
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label for="input_PT08_S2">PT08.S2 — Titania (NMHC sensor)</label>
+                  <div class="slider-input-combo">
+                    <input type="range" id="input_PT08_S2_range" min="383" max="2214" step="1" value="942">
+                    <input type="number" id="input_PT08_S2" min="383" max="2214" step="1" value="942">
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label for="input_NOx_GT">NOx(GT) — Nitrogen Oxides (ppb)</label>
+                  <div class="slider-input-combo">
+                    <input type="range" id="input_NOx_GT_range" min="2" max="1479" step="1" value="230">
+                    <input type="number" id="input_NOx_GT" min="2" max="1479" step="1" value="230">
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label for="input_PT08_S3">PT08.S3 — Tungsten Oxide (NOx)</label>
+                  <div class="slider-input-combo">
+                    <input type="range" id="input_PT08_S3_range" min="322" max="2683" step="1" value="798">
+                    <input type="number" id="input_PT08_S3" min="322" max="2683" step="1" value="798">
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label for="input_NO2_GT">NO2(GT) — Nitrogen Dioxide (μg/m³)</label>
+                  <div class="slider-input-combo">
+                    <input type="range" id="input_NO2_GT_range" min="2" max="340" step="1" value="106">
+                    <input type="number" id="input_NO2_GT" min="2" max="340" step="1" value="106">
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label for="input_PT08_S4">PT08.S4 — Tungsten Oxide (NO2)</label>
+                  <div class="slider-input-combo">
+                    <input type="range" id="input_PT08_S4_range" min="551" max="2775" step="1" value="1453">
+                    <input type="number" id="input_PT08_S4" min="551" max="2775" step="1" value="1453">
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label for="input_PT08_S5">PT08.S5 — Indium Oxide (Ozone)</label>
+                  <div class="slider-input-combo">
+                    <input type="range" id="input_PT08_S5_range" min="221" max="2523" step="1" value="1010">
+                    <input type="number" id="input_PT08_S5" min="221" max="2523" step="1" value="1010">
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label for="input_T">Temperature T (°C)</label>
+                  <div class="slider-input-combo">
+                    <input type="range" id="input_T_range" min="-1.9" max="44.6" step="0.1" value="17.7">
+                    <input type="number" id="input_T" min="-1.9" max="44.6" step="0.1" value="17.7">
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label for="input_RH">Relative Humidity RH (%)</label>
+                  <div class="slider-input-combo">
+                    <input type="range" id="input_RH_range" min="9.2" max="88.7" step="0.1" value="48.8">
+                    <input type="number" id="input_RH" min="9.2" max="88.7" step="0.1" value="48.8">
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label for="input_AH">Absolute Humidity AH</label>
+                  <div class="slider-input-combo">
+                    <input type="range" id="input_AH_range" min="0.18" max="2.23" step="0.01" value="0.99">
+                    <input type="number" id="input_AH" min="0.18" max="2.23" step="0.01" value="0.99">
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label for="input_NMHC_GT">NMHC(GT) — Hydrocarbons</label>
+                  <div class="slider-input-combo">
+                    <input type="range" id="input_NMHC_GT_range" min="4" max="1189" step="1" value="150">
+                    <input type="number" id="input_NMHC_GT" min="4" max="1189" step="1" value="150">
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-actions">
+                <button class="btn btn-primary" id="btnPredictRegression">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+                  Predict C6H6(GT)
+                </button>
+                <button class="btn btn-accent" id="btnCompareRegressionWhatIf">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+                  Compare Across All 10 Models (What-If)
+                </button>
+              </div>
+
+              <div class="callout-note mt-3">
+                <strong>Model Behavior Note:</strong> Adjusting sensor inputs demonstrates how fitted regression functions respond to feature combinations. It does not establish empirical causality.
+              </div>
+            </div>
+
+            <!-- Prediction Result & What-If Comparison Panel -->
+            <div class="results-column">
+              
+              <!-- Primary Prediction Output -->
+              <div class="panel-card result-panel">
+                <div class="panel-card-header">
+                  <h3>Predicted Benzene C6H6(GT)</h3>
+                  <span class="badge" id="regResultModelBadge">Random Forest</span>
+                </div>
+                
+                <div class="prediction-display">
+                  <div class="prediction-value" id="regPredValue">9.82</div>
+                  <div class="prediction-unit">μg/m³ (Ground-Truth Benzene)</div>
+                  <div class="status-pill status-moderate" id="regPredCategory">Moderate Ambient (5 - 10 μg/m³)</div>
+                </div>
+
+                <div class="prediction-reference">
+                  <small>European Air Quality Guideline Threshold: <strong>5.0 μg/m³ annual limit</strong></small>
+                </div>
+              </div>
+
+              <!-- What-If Multi-Model Comparison Chart -->
+              <div class="panel-card">
+                <div class="panel-card-header">
+                  <h3>What-If Simulator — All 10 Regressors</h3>
+                  <small class="text-muted">Identical input evaluated across all trained pipelines</small>
+                </div>
+                
+                <div class="what-if-bars" id="whatIfBarsContainer">
+                  <!-- Populated by JS -->
+                  <div class="bar-row">
+                    <span class="bar-label">Random Forest</span>
+                    <div class="bar-track"><div class="bar-fill" style="width: 65%;"></div></div>
+                    <span class="bar-val">9.82 μg/m³</span>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+        <!-- TAB 2: Compare Models Table -->
+        <div class="tab-content" id="tab-reg-compare">
+          <div class="panel-card">
+            <div class="panel-card-header">
+              <div>
+                <h3>Regression Track Leaderboard (10 Algorithms)</h3>
+                <small class="text-muted">Evaluated on identical 20% held-out test split (1,872 samples). Higher R² is better; lower RMSE and MAE are better.</small>
+              </div>
+            </div>
+            
+            <div class="table-responsive">
+              <table class="data-table" id="regComparisonTable">
+                <thead>
+                  <tr>
+                    <th>Algorithm</th>
+                    <th>R² Score ↑</th>
+                    <th>RMSE (μg/m³) ↓</th>
+                    <th>MAE (μg/m³) ↓</th>
+                    <th>Status</th>
+                    <th>Complexity</th>
+                  </tr>
+                </thead>
+                <tbody id="regComparisonBody">
+                  <!-- Populated by JS -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB 3: Diagnostics -->
+        <div class="tab-content" id="tab-reg-diagnostics">
+          <div class="diagnostics-grid">
+            
+            <div class="panel-card">
+              <div class="panel-card-header">
+                <div>
+                  <h3>Predicted vs. Actual Scatter Plot</h3>
+                  <small class="text-muted">Evaluated against ideal y = x reference line</small>
+                </div>
+                <span class="badge">Held-out Test Samples</span>
+              </div>
+              <div class="chart-container" id="regScatterContainer">
+                <canvas id="regScatterCanvas" width="500" height="320"></canvas>
+              </div>
+            </div>
+
+            <div class="panel-card">
+              <div class="panel-card-header">
+                <div>
+                  <h3>Residual Plot (Actual − Predicted)</h3>
+                  <small class="text-muted">Residual dispersion vs. fitted values</small>
+                </div>
+                <span class="badge">Zero Mean Centered</span>
+              </div>
+              <div class="chart-container" id="regResidualContainer">
+                <canvas id="regResidualCanvas" width="500" height="320"></canvas>
+              </div>
+            </div>
+
+          </div>
+          
+          <div class="panel-card mt-3">
+            <div class="panel-card-header">
+              <h3>Evaluation Split & Preprocessing Summary</h3>
+            </div>
+            <div class="split-info-grid">
+              <div class="split-item">
+                <strong>80 / 20 Train-Test Split</strong>
+                <p>7,485 training observations, 1,872 held-out test records.</p>
+              </div>
+              <div class="split-item">
+                <strong>Sentinel Imputation</strong>
+                <p>-200 sensor error flags replaced via training median; zero test data leakage.</p>
+              </div>
+              <div class="split-item">
+                <strong>Feature Standardization</strong>
+                <p>StandardScaler fit strictly on training fold; test set transformed with frozen statistics.</p>
               </div>
             </div>
           </div>
+        </div>
 
-        </aside>
-
-        <!-- Bottom Card: Benchmark Leaderboard Table -->
-        <section class="glass-card table-card" id="leaderboardSection">
-          <div class="table-header-row">
-            <div>
-              <h2>Benchmark Leaderboard: All Evaluated Algorithms</h2>
-              <p style="font-size: 13px; color: var(--text-muted); margin-top: 2px;">
-                Consolidated results across Review 1 & Review 2 with internal and cross-validation metrics
-              </p>
+        <!-- TAB 4: Feature Insights -->
+        <div class="tab-content" id="tab-reg-features">
+          <div class="panel-card">
+            <div class="panel-card-header">
+              <div>
+                <h3>Feature Importance & Sensor Association</h3>
+                <small class="text-muted">Gini impurity decrease for Random Forest and Gradient Boosting estimators</small>
+              </div>
             </div>
 
-            <div style="display: flex; gap: 10px; align-items: center;">
-              <div class="table-filters">
-                <button class="filter-tab active" data-filter="all">All Tracks</button>
-                <button class="filter-tab" data-filter="Classification">Classification</button>
-                <button class="filter-tab" data-filter="Clustering">Clustering</button>
-                <button class="filter-tab" data-filter="Regression">Regression</button>
+            <div class="feature-importance-list">
+              <div class="importance-item">
+                <div class="importance-header">
+                  <span>PT08.S2 (NMHC sensor)</span>
+                  <strong>48.6%</strong>
+                </div>
+                <div class="bar-track"><div class="bar-fill" style="width: 48.6%;"></div></div>
+                <small class="text-muted">Highest relative predictive association with ground-truth benzene concentration.</small>
               </div>
-              <button class="filter-tab" id="exportCsvBtn" title="Download Benchmark Data (CSV)" style="display: flex; align-items: center; gap: 6px; background: rgba(255,255,255,0.08);">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                  <polyline points="7 10 12 15 17 10"></polyline>
-                  <line x1="12" y1="15" x2="12" y2="3"></line>
-                </svg>
-                <span>Export CSV</span>
+
+              <div class="importance-item">
+                <div class="importance-header">
+                  <span>PT08.S1 (CO sensor)</span>
+                  <strong>18.4%</strong>
+                </div>
+                <div class="bar-track"><div class="bar-fill" style="width: 18.4%;"></div></div>
+                <small class="text-muted">Tin oxide sensor response tracking co-occurring combustion products.</small>
+              </div>
+
+              <div class="importance-item">
+                <div class="importance-header">
+                  <span>PT08.S3 (NOx sensor)</span>
+                  <strong>11.2%</strong>
+                </div>
+                <div class="bar-track"><div class="bar-fill" style="width: 11.2%;"></div></div>
+                <small class="text-muted">Tungsten oxide photochemical sensor tracking urban traffic exhaust.</small>
+              </div>
+
+              <div class="importance-item">
+                <div class="importance-header">
+                  <span>Temperature & Relative Humidity</span>
+                  <strong>8.5%</strong>
+                </div>
+                <div class="bar-track"><div class="bar-fill" style="width: 8.5%;"></div></div>
+                <small class="text-muted">Meteorological parameters influencing ambient chemical dispersion and sensor resistance.</small>
+              </div>
+            </div>
+
+            <div class="callout-note mt-3">
+              <strong>Methodological Note:</strong> Feature importance indicates predictive reliance within tree-based ensembles. It reflects observational correlation and does not constitute causal impact.
+            </div>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- VIEW 3: CLASSIFICATION LAB -->
+      <section class="page-view" id="view-classification">
+        <div class="lab-header">
+          <div class="lab-title-group">
+            <div class="lab-badge classification-badge">Classification Track</div>
+            <h1>Classification Lab — Model Face-Off</h1>
+            <p>UCI Credit Approval binary classification task (<code>+</code> Approved / <code>−</code> Rejected).</p>
+          </div>
+
+          <div class="model-selector-bar">
+            <label for="classModelSelect">Active Classifier:</label>
+            <select id="classModelSelect" class="form-select">
+              <option value="random_forest" selected>Random Forest Classifier (Tuned) [Best: 91.3% Acc, ROC-AUC 0.967]</option>
+              <option value="bagging">Bagging Classifier (Tree Ensemble) [88.4% Acc, ROC-AUC 0.958]</option>
+              <option value="logistic_regression">Logistic Regression [87.0% Acc, ROC-AUC 0.962]</option>
+              <option value="gradient_boosting">Gradient Boosting Classifier [87.0% Acc, ROC-AUC 0.948]</option>
+              <option value="adaboost">AdaBoost Classifier [87.0% Acc, ROC-AUC 0.955]</option>
+              <option value="svm_rbf">Support Vector Machine (RBF) [87.7% Acc, ROC-AUC 0.951]</option>
+              <option value="decision_tree">Decision Tree Classifier [87.7% Acc, ROC-AUC 0.953]</option>
+              <option value="knn">K-Nearest Neighbors (k=7) [92.8% Acc, ROC-AUC 0.951]</option>
+              <option value="mlp">MLP Neural Network Classifier [83.3% Acc, ROC-AUC 0.912]</option>
+              <option value="naive_bayes">Gaussian Naive Bayes [76.8% Acc, ROC-AUC 0.919]</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Educational Disclaimer Banner -->
+        <div class="disclaimer-banner">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+          <div>
+            <strong>Educational Demonstration Only:</strong> This dashboard is an academic ML showcase using the sanitized UCI Credit dataset. It is strictly not intended, licensed, or calibrated for real-world credit approval, lending, or underwriting decisions. Probabilities represent model-estimated likelihoods, not statistical certainty.
+          </div>
+        </div>
+
+        <!-- Classification Tabs -->
+        <div class="tab-bar">
+          <button class="tab-btn active" data-tab="class-predict">1. Predict</button>
+          <button class="tab-btn" data-tab="class-faceoff">2. Compare (Model Face-Off)</button>
+          <button class="tab-btn" data-tab="class-evaluation">3. Evaluation</button>
+          <button class="tab-btn" data-tab="class-explain">4. Explainability</button>
+        </div>
+
+        <!-- TAB 1: Predict (Active & Placeholder States) -->
+        <div class="tab-content active" id="tab-class-predict">
+          
+          <!-- Placeholder Notice (Shown if user picks an unbuilt model) -->
+          <div class="placeholder-card hidden" id="classPlaceholderNotice">
+            <div class="placeholder-icon">
+              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+            </div>
+            <div class="placeholder-content">
+              <span class="badge badge-warning">Pipeline In Development</span>
+              <h3 id="placeholderModelName">AdaBoost Classifier</h3>
+              <p>This classifier pipeline is currently undergoing hyperparameter tuning and cross-validation benchmarking (Review 2 Planned Step). The full trained estimator will be integrated soon.</p>
+              <p>In the meantime, you can test live inferences using any of the <strong>6 active estimators</strong> (Random Forest, Logistic Regression, SVM, Decision Tree, KNN, Naive Bayes), or review comparative metrics in the Face-Off tab.</p>
+              <button class="btn btn-primary mt-2" id="btnSwitchActiveModel">
+                Switch to Best Model (Random Forest) →
               </button>
             </div>
           </div>
 
-          <table class="leaderboard-table">
-            <thead>
-              <tr>
-                <th>Model / Track</th>
-                <th>Primary Metric</th>
-                <th>Secondary Metric</th>
-                <th>Validation / Accuracy</th>
-                <th>Performance Sparkline</th>
-                <th>Status</th>
-                <th>Action</th>
-              </tr>
-            </thead>
-            <tbody id="leaderboardTableBody">
-              <!-- Dynamically populated from leaderboard.json or fallback -->
-            </tbody>
-          </table>
-        </section>
+          <!-- Active Model Prediction Form -->
+          <div class="simulator-layout" id="classActiveFormLayout">
+            
+            <!-- Credit Features Form -->
+            <div class="panel-card">
+              <div class="panel-card-header">
+                <div>
+                  <h3>Applicant Feature Inputs</h3>
+                  <small class="text-muted">Derived from UCI Credit Approval schema</small>
+                </div>
+                <div class="preset-buttons">
+                  <button class="btn btn-xs" id="presetApproveBtn">High Approval Profile</button>
+                  <button class="btn btn-xs" id="presetRejectBtn">High Risk Profile</button>
+                  <button class="btn btn-xs" id="presetBorderlineBtn">Borderline</button>
+                </div>
+              </div>
 
-      </div>
+              <div class="form-grid">
+                <div class="form-group">
+                  <label for="input_A9">A9: Prior Credit History / Active Cards</label>
+                  <select id="input_A9" class="form-select highlight-field">
+                    <option value="t" selected>t (Yes — Prior Credit Verified / Active Cards)</option>
+                    <option value="f">f (No — Prior Default or No Credit Cards)</option>
+                  </select>
+                  <small class="text-accent">Primary driver: 78.7% approval rate for 't' vs 7.0% for 'f'</small>
+                </div>
+
+                <div class="form-group">
+                  <label for="input_A10">A10: Employment Status</label>
+                  <select id="input_A10" class="form-select">
+                    <option value="t" selected>t (Employed)</option>
+                    <option value="f">f (Unemployed)</option>
+                  </select>
+                </div>
+
+                <div class="form-group">
+                  <label for="input_A2">A2: Applicant Age (Years)</label>
+                  <input type="number" id="input_A2" min="13" max="80" step="0.5" value="31.5">
+                </div>
+
+                <div class="form-group">
+                  <label for="input_A3">A3: Debt (Scaled Ratio)</label>
+                  <input type="number" id="input_A3" min="0" max="28" step="0.1" value="4.5">
+                </div>
+
+                <div class="form-group">
+                  <label for="input_A8">A8: Years Employed</label>
+                  <input type="number" id="input_A8" min="0" max="28.5" step="0.1" value="2.5">
+                </div>
+
+                <div class="form-group">
+                  <label for="input_A11">A11: Credit Score / Active Tradelines</label>
+                  <input type="number" id="input_A11" min="0" max="67" step="1" value="2">
+                </div>
+
+                <div class="form-group">
+                  <label for="input_A14">A14: Postal Code / Numerical District</label>
+                  <input type="number" id="input_A14" min="0" max="2000" step="10" value="180">
+                </div>
+
+                <div class="form-group">
+                  <label for="input_A15">A15: Income / Liquidity (USD)</label>
+                  <input type="number" id="input_A15" min="0" max="100000" step="100" value="500">
+                </div>
+
+                <div class="form-group">
+                  <label for="input_A4">A4: Bank Customer Status</label>
+                  <select id="input_A4" class="form-select">
+                    <option value="u" selected>u (Bank Customer)</option>
+                    <option value="y">y (Non-Bank Customer)</option>
+                    <option value="l">l (Other)</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-actions">
+                <button class="btn btn-primary" id="btnPredictClassification">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+                  Evaluate Credit Application
+                </button>
+                <button class="btn btn-secondary" id="btnCompareClassAll">
+                  Compare Across All Active Models
+                </button>
+              </div>
+            </div>
+
+            <!-- Decision Result Card -->
+            <div class="results-column">
+              <div class="panel-card result-panel">
+                <div class="panel-card-header">
+                  <h3>Model Decision Output</h3>
+                  <span class="badge" id="classResultModelBadge">Random Forest</span>
+                </div>
+
+                <div class="prediction-display">
+                  <div class="decision-badge badge-approved" id="classDecisionBadge">APPROVED</div>
+                  <div class="probability-metric mt-2">
+                    <span class="text-muted">Model-Estimated Probability:</span>
+                    <strong class="prob-num text-accent" id="classProbVal">84.5%</strong>
+                  </div>
+                  
+                  <div class="prob-bar-container">
+                    <div class="prob-bar-fill" id="classProbBar" style="width: 84.5%;"></div>
+                  </div>
+                  
+                  <div class="prob-labels">
+                    <small>0% (Definite Reject)</small>
+                    <small>Threshold (50%)</small>
+                    <small>100% (Definite Approve)</small>
+                  </div>
+                </div>
+
+                <div class="top-drivers-block mt-3">
+                  <h4>Top Predictive Drivers:</h4>
+                  <ul class="drivers-list" id="classDriversList">
+                    <li><span class="driver-name">A9 Prior Credit History</span><span class="driver-weight">41.2%</span></li>
+                    <li><span class="driver-name">A11 Credit Score Tradelines</span><span class="driver-weight">14.5%</span></li>
+                    <li><span class="driver-name">A8 Years Employed</span><span class="driver-weight">11.2%</span></li>
+                    <li><span class="driver-name">A3 Debt Ratio</span><span class="driver-weight">9.1%</span></li>
+                  </ul>
+                </div>
+              </div>
+
+              <!-- Multi-Model Comparison Card -->
+              <div class="panel-card">
+                <div class="panel-card-header">
+                  <h3>Active Models Agreement</h3>
+                </div>
+                <div class="what-if-bars" id="classAgreementBars">
+                  <!-- Populated by JS -->
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+
+        <!-- TAB 2: Compare (Model Face-Off) -->
+        <div class="tab-content" id="tab-class-faceoff">
+          
+          <!-- Standout Feature: Model Face-Off -->
+          <div class="panel-card faceoff-panel">
+            <div class="panel-card-header">
+              <div>
+                <span class="badge accent-badge">Standout Feature</span>
+                <h2>Head-to-Head Model Face-Off</h2>
+                <small class="text-muted">Select any two classifiers to benchmark side-by-side on the identical test split (138 samples)</small>
+              </div>
+            </div>
+
+            <div class="faceoff-selectors">
+              <div class="faceoff-select-group">
+                <label>Challenger Model A:</label>
+                <select id="faceoffModelA" class="form-select">
+                  <option value="random_forest" selected>Random Forest Classifier (Tuned)</option>
+                  <option value="bagging">Bagging Classifier</option>
+                  <option value="logistic_regression">Logistic Regression</option>
+                  <option value="gradient_boosting">Gradient Boosting</option>
+                  <option value="adaboost">AdaBoost Classifier</option>
+                  <option value="svm_rbf">Support Vector Machine (RBF)</option>
+                  <option value="decision_tree">Decision Tree Classifier</option>
+                  <option value="knn">K-Nearest Neighbors (k=7)</option>
+                  <option value="mlp">MLP Neural Network</option>
+                  <option value="naive_bayes">Gaussian Naive Bayes</option>
+                </select>
+              </div>
+
+              <div class="faceoff-vs">VS</div>
+
+              <div class="faceoff-select-group">
+                <label>Challenger Model B:</label>
+                <select id="faceoffModelB" class="form-select">
+                  <option value="logistic_regression" selected>Logistic Regression</option>
+                  <option value="random_forest">Random Forest Classifier (Tuned)</option>
+                  <option value="bagging">Bagging Classifier</option>
+                  <option value="gradient_boosting">Gradient Boosting</option>
+                  <option value="adaboost">AdaBoost Classifier</option>
+                  <option value="svm_rbf">Support Vector Machine (RBF)</option>
+                  <option value="decision_tree">Decision Tree Classifier</option>
+                  <option value="knn">K-Nearest Neighbors (k=7)</option>
+                  <option value="mlp">MLP Neural Network</option>
+                  <option value="naive_bayes">Gaussian Naive Bayes</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Faceoff Cards Grid -->
+            <div class="faceoff-cards-grid mt-3">
+              <div class="faceoff-card" id="faceoffCardA">
+                <h3 id="faceoffTitleA">Random Forest Classifier</h3>
+                <div class="faceoff-metrics">
+                  <div class="fo-metric"><span>Accuracy</span><strong id="foAccA">88.4%</strong></div>
+                  <div class="fo-metric"><span>ROC-AUC</span><strong id="foAucA">0.962</strong></div>
+                  <div class="fo-metric"><span>Precision</span><strong id="foPrecA">89.5%</strong></div>
+                  <div class="fo-metric"><span>Recall</span><strong id="foRecA">83.6%</strong></div>
+                  <div class="fo-metric"><span>Weighted F1</span><strong id="foF1A">0.864</strong></div>
+                </div>
+              </div>
+
+              <div class="faceoff-card" id="faceoffCardB">
+                <h3 id="faceoffTitleB">Logistic Regression</h3>
+                <div class="faceoff-metrics">
+                  <div class="fo-metric"><span>Accuracy</span><strong id="foAccB">87.0%</strong></div>
+                  <div class="fo-metric"><span>ROC-AUC</span><strong id="foAucB">0.960</strong></div>
+                  <div class="fo-metric"><span>Precision</span><strong id="foPrecB">86.2%</strong></div>
+                  <div class="fo-metric"><span>Recall</span><strong id="foRecB">82.0%</strong></div>
+                  <div class="fo-metric"><span>Weighted F1</span><strong id="foF1B">0.840</strong></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Visual Delta Bars -->
+            <div class="faceoff-delta-block mt-3" id="faceoffDeltaBlock">
+              <!-- Rendered via JS -->
+            </div>
+          </div>
+
+          <!-- All 10 Classifiers Full Table -->
+          <div class="panel-card mt-3">
+            <div class="panel-card-header">
+              <h3>All 10 Classification Algorithms</h3>
+              <span class="badge">6 Active • 4 In Development</span>
+            </div>
+            
+            <div class="table-responsive">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Algorithm</th>
+                    <th>ROC-AUC ↑</th>
+                    <th>Accuracy ↑</th>
+                    <th>F1 Score ↑</th>
+                    <th>Status</th>
+                    <th>Phase</th>
+                  </tr>
+                </thead>
+                <tbody id="classAllTableBody">
+                  <!-- Populated by JS -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- TAB 3: Evaluation -->
+        <div class="tab-content" id="tab-class-evaluation">
+          <div class="diagnostics-grid">
+            
+            <!-- Confusion Matrix Card -->
+            <div class="panel-card">
+              <div class="panel-card-header">
+                <div>
+                  <h3>Interactive Confusion Matrix</h3>
+                  <small class="text-muted">Held-out test split (138 instances)</small>
+                </div>
+                <span class="badge" id="cmModelBadge">Random Forest</span>
+              </div>
+
+              <div class="cm-grid-wrapper">
+                <div class="cm-labels-top">
+                  <span>Predicted Negative (−)</span>
+                  <span>Predicted Positive (+)</span>
+                </div>
+                <div class="cm-body">
+                  <div class="cm-labels-left">
+                    <span>Actual (−)</span>
+                    <span>Actual (+)</span>
+                  </div>
+                  <div class="cm-matrix">
+                    <div class="cm-cell cm-tn">
+                      <span class="cm-type">True Negative (TN)</span>
+                      <strong class="cm-count" id="cmTN">71</strong>
+                      <small class="cm-percent">51.4%</small>
+                    </div>
+                    <div class="cm-cell cm-fp">
+                      <span class="cm-type">False Positive (FP)</span>
+                      <strong class="cm-count" id="cmFP">6</strong>
+                      <small class="cm-percent">4.3%</small>
+                    </div>
+                    <div class="cm-cell cm-fn">
+                      <span class="cm-type">False Negative (FN)</span>
+                      <strong class="cm-count" id="cmFN">10</strong>
+                      <small class="cm-percent">7.2%</small>
+                    </div>
+                    <div class="cm-cell cm-tp">
+                      <span class="cm-type">True Positive (TP)</span>
+                      <strong class="cm-count" id="cmTP">51</strong>
+                      <small class="cm-percent">37.0%</small>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="cm-summary-stats mt-3">
+                <div class="stat-item"><span>Accuracy:</span><strong id="cmAcc">88.4%</strong></div>
+                <div class="stat-item"><span>Specificity (TN Rate):</span><strong id="cmSpec">92.2%</strong></div>
+                <div class="stat-item"><span>Sensitivity (Recall):</span><strong id="cmSens">83.6%</strong></div>
+              </div>
+            </div>
+
+            <!-- ROC Curve Card -->
+            <div class="panel-card">
+              <div class="panel-card-header">
+                <div>
+                  <h3>Receiver Operating Characteristic (ROC)</h3>
+                  <small class="text-muted">True Positive Rate vs False Positive Rate</small>
+                </div>
+                <span class="badge badge-accent">AUC: 0.962</span>
+              </div>
+
+              <div class="chart-container">
+                <canvas id="classRocCanvas" width="480" height="300"></canvas>
+              </div>
+
+              <div class="roc-notes mt-2">
+                <small class="text-muted">Computed from continuous estimator score predictions; strictly superior to random baseline (diagonal dashed line).</small>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- TAB 4: Explainability -->
+        <div class="tab-content" id="tab-class-explain">
+          <div class="panel-card">
+            <div class="panel-card-header">
+              <div>
+                <h3>Global Feature Importance Drivers</h3>
+                <small class="text-muted">Mean Decrease in Impurity across 200 Decision Trees</small>
+              </div>
+            </div>
+
+            <div class="feature-importance-list">
+              <div class="importance-item">
+                <div class="importance-header">
+                  <span>A9: Prior Credit Verification / Active Cards</span>
+                  <strong>41.2%</strong>
+                </div>
+                <div class="bar-track"><div class="bar-fill" style="width: 41.2%;"></div></div>
+                <small class="text-muted">Single dominant discriminator in credit underwriting history.</small>
+              </div>
+
+              <div class="importance-item">
+                <div class="importance-header">
+                  <span>A11: Credit Score Tradelines</span>
+                  <strong>14.5%</strong>
+                </div>
+                <div class="bar-track"><div class="bar-fill" style="width: 14.5%;"></div></div>
+                <small class="text-muted">Number of active, satisfactorily maintained credit accounts.</small>
+              </div>
+
+              <div class="importance-item">
+                <div class="importance-header">
+                  <span>A8: Years in Continuous Employment</span>
+                  <strong>11.2%</strong>
+                </div>
+                <div class="bar-track"><div class="bar-fill" style="width: 11.2%;"></div></div>
+                <small class="text-muted">Stability indicator correlating with consistent repayment capacity.</small>
+              </div>
+
+              <div class="importance-item">
+                <div class="importance-header">
+                  <span>A3: Debt-to-Asset Ratio</span>
+                  <strong>9.1%</strong>
+                </div>
+                <div class="bar-track"><div class="bar-fill" style="width: 9.1%;"></div></div>
+                <small class="text-muted">Leverage ratio representing applicant's ongoing debt burden.</small>
+              </div>
+            </div>
+
+            <div class="callout-note mt-3">
+              <strong>Fair Lending & Explainability Notice:</strong> Feature associations are learned statistical representations from historical data. They do not imply moral causation or appropriateness for commercial lending.
+            </div>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- VIEW 4: CLUSTERING LAB -->
+      <section class="page-view" id="view-clustering">
+        <div class="lab-header">
+          <div class="lab-title-group">
+            <div class="lab-badge clustering-badge">Clustering Track</div>
+            <h1>Clustering Lab — Cluster Playground</h1>
+            <p>UR3 Robotic Telemetry (19 sensor channels, 7,409 instances) • Operating regime discovery and post-hoc hazard validation.</p>
+          </div>
+        </div>
+
+        <!-- Controls Bar -->
+        <div class="clustering-controls-bar">
+          <div class="control-item">
+            <label for="clustAlgoSelect">Algorithm:</label>
+            <select id="clustAlgoSelect" class="form-select">
+              <option value="kmeans" selected>K-Means (Partitioning)</option>
+              <option value="agglomerative">Agglomerative Hierarchical</option>
+            </select>
+          </div>
+
+          <div class="control-item" id="linkageControlGroup" style="display: none;">
+            <label for="clustLinkageSelect">Linkage:</label>
+            <select id="clustLinkageSelect" class="form-select">
+              <option value="ward" selected>Ward (Min Variance)</option>
+              <option value="complete">Complete (Max Distance)</option>
+              <option value="average">Average (Mean Distance)</option>
+            </select>
+          </div>
+
+          <div class="control-item">
+            <label for="clustKRange">Cluster Count (K): <strong id="clustKVal" class="text-accent">2</strong></label>
+            <input type="range" id="clustKRange" min="2" max="8" step="1" value="2">
+          </div>
+
+          <div class="control-action">
+            <button class="btn btn-primary" id="btnRunClustering">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+              Refit Cluster Model
+            </button>
+          </div>
+        </div>
+
+        <!-- Clustering Tabs -->
+        <div class="tab-bar">
+          <button class="tab-btn active" data-tab="clust-explore">1. Explore & Playground</button>
+          <button class="tab-btn" data-tab="clust-elbow">2. Choose Cluster Count (Elbow)</button>
+          <button class="tab-btn" data-tab="clust-dendro">3. Dendrogram</button>
+          <button class="tab-btn" data-tab="clust-visualize">4. Visualize (PCA & t-SNE)</button>
+          <button class="tab-btn" data-tab="clust-hazard">5. Evaluate & Hazard Interpret</button>
+        </div>
+
+        <!-- TAB 1: Explore & Playground -->
+        <div class="tab-content active" id="tab-clust-explore">
+          <div class="metrics-summary-grid">
+            <div class="metric-card">
+              <div class="metric-card-top">
+                <span class="metric-title">Silhouette Score ↑</span>
+                <span class="metric-badge-good" id="silStatusBadge">Higher is Better</span>
+              </div>
+              <div class="metric-value-huge text-accent" id="clustSilhouette">0.3117</div>
+              <div class="metric-subtext">Optimal cohesion and separation at k=2</div>
+            </div>
+
+            <div class="metric-card">
+              <div class="metric-card-top">
+                <span class="metric-title">Davies-Bouldin Index ↓</span>
+                <span class="metric-badge-good">Lower is Better</span>
+              </div>
+              <div class="metric-value-huge text-accent" id="clustDB">1.3939</div>
+              <div class="metric-subtext">Low cluster overlap across joint sensors</div>
+            </div>
+
+            <div class="metric-card">
+              <div class="metric-card-top">
+                <span class="metric-title">Calinski-Harabasz Score ↑</span>
+                <span class="metric-badge-good">Higher is Better</span>
+              </div>
+              <div class="metric-value-huge text-accent" id="clustCH">1997.1</div>
+              <div class="metric-subtext">Ratio of between-to-within dispersion</div>
+            </div>
+          </div>
+
+          <!-- Cluster Summary Cards -->
+          <div class="cluster-profiles-grid mt-3" id="clusterProfilesGrid">
+            
+            <div class="panel-card cluster-card cluster-0">
+              <div class="cluster-badge cluster-0-badge">Cluster 0 (Primary)</div>
+              <h3>High Electrical Load / Vibration Regime</h3>
+              <div class="cluster-stat-row">
+                <span>Sample Count:</span>
+                <strong>3,929 (66.3%)</strong>
+              </div>
+              <div class="cluster-stat-row">
+                <span>Protective Stops:</span>
+                <strong class="text-accent">187 Emergency Stops (4.76%)</strong>
+              </div>
+              <div class="cluster-stat-row">
+                <span>Profile:</span>
+                <span>Elevated wrist currents, high torque deviations, stop-prone.</span>
+              </div>
+            </div>
+
+            <div class="panel-card cluster-card cluster-1">
+              <div class="cluster-badge cluster-1-badge">Cluster 1 (Secondary)</div>
+              <h3>Routine Nominal Motion Regime</h3>
+              <div class="cluster-stat-row">
+                <span>Sample Count:</span>
+                <strong>1,998 (33.7%)</strong>
+              </div>
+              <div class="cluster-stat-row">
+                <span>Protective Stops:</span>
+                <strong>39 Emergency Stops (1.95%)</strong>
+              </div>
+              <div class="cluster-stat-row">
+                <span>Profile:</span>
+                <span>Smooth motion trajectories, low current draw, stable operation.</span>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- TAB 2: Choose Cluster Count (Elbow Plot) -->
+        <div class="tab-content" id="tab-clust-elbow">
+          <div class="panel-card">
+            <div class="panel-card-header">
+              <div>
+                <h3>Elbow Method & Silhouette Scan</h3>
+                <small class="text-muted">Inertia (Within-Cluster Sum of Squares) & Silhouette score plotted across k = 2 to 10</small>
+              </div>
+              <span class="badge accent-badge">Optimal K = 2</span>
+            </div>
+
+            <div class="chart-container">
+              <canvas id="clustElbowCanvas" width="900" height="380"></canvas>
+            </div>
+
+            <div class="elbow-explanation mt-3">
+              <p><strong>Methodological Insight:</strong> While higher K naturally reduces inertia, the rate of variance explained exhibits an inflection point ("elbow") at <strong>k = 2</strong>. This is independently confirmed by the global peak in Silhouette Score (0.3117), validating 2 natural operating modes for the UR3 manipulator.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB 3: Dendrogram -->
+        <div class="tab-content" id="tab-clust-dendro">
+          <div class="panel-card">
+            <div class="panel-card-header">
+              <div>
+                <h3>Agglomerative Hierarchical Dendrogram (Ward Linkage)</h3>
+                <small class="text-muted">Hierarchical cluster tree based on Euclidean distance in standardized 19-sensor feature space</small>
+              </div>
+              <span class="badge">Cutoff Threshold: d = 3.8</span>
+            </div>
+
+            <div class="chart-container">
+              <canvas id="clustDendroCanvas" width="900" height="380"></canvas>
+            </div>
+
+            <div class="dendro-explanation mt-3">
+              <p><strong>Interpretation:</strong> Ward's minimum-variance criterion progressively merges telemetry states. Cutting the tree at distance threshold <strong>d = 3.8</strong> yields 2 predominant super-clusters, matching the K-Means partition.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB 4: Visualize (PCA & t-SNE) -->
+        <div class="tab-content" id="tab-clust-visualize">
+          <div class="panel-card">
+            <div class="panel-card-header">
+              <div>
+                <h3>2D Projection Exploration</h3>
+                <small class="text-muted" id="projectionSubtitle">PCA (Linear Variance): PC1 (31.5%) + PC2 (16.5%) = 48.0% Total Variance Explained</small>
+              </div>
+
+              <div class="projection-toggle">
+                <button class="btn btn-xs active" id="btnProjPCA">PCA 2D</button>
+                <button class="btn btn-xs" id="btnProjTSNE">t-SNE 2D</button>
+              </div>
+            </div>
+
+            <!-- Interactive Canvas Scatter -->
+            <div class="scatter-interactive-container">
+              <canvas id="clustScatterCanvas" width="900" height="480"></canvas>
+              <div class="scatter-tooltip" id="scatterTooltip"></div>
+            </div>
+
+            <div class="projection-legend">
+              <div class="legend-item"><span class="legend-color-dot" style="background: #38bdf8;"></span> Cluster 0 (Stop-Prone)</div>
+              <div class="legend-item"><span class="legend-color-dot" style="background: #f59e0b;"></span> Cluster 1 (Nominal)</div>
+              <small class="text-muted">Hover over individual points to inspect coordinates and cluster assignment.</small>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB 5: Evaluate & Post-Hoc Hazard Interpretation -->
+        <div class="tab-content" id="tab-clust-hazard">
+          <div class="panel-card">
+            <div class="panel-card-header">
+              <div>
+                <span class="badge accent-badge">Unsupervised Safety Discovery</span>
+                <h2>Post-Hoc Hazard Ratio Validation</h2>
+                <small class="text-muted">Ground-truth label <code>Robot_ProtectiveStop</code> was strictly excluded during clustering</small>
+              </div>
+            </div>
+
+            <div class="hazard-spotlight">
+              <div class="hazard-big-stat">
+                <div class="hazard-num text-accent">2.44×</div>
+                <div class="hazard-title">Relative Hazard Ratio</div>
+                <p>Cluster 0 is 2.44 times more likely to experience an emergency safety stop than Cluster 1.</p>
+              </div>
+
+              <div class="hazard-comparison-bars">
+                <div class="hazard-bar-row">
+                  <div class="h-label">
+                    <span>Cluster 0 (High Electrical Load)</span>
+                    <strong>4.76% Emergency Stop Rate (187 stops / 3,929 cycles)</strong>
+                  </div>
+                  <div class="h-track"><div class="h-fill fill-hazard" style="width: 47.6%;"></div></div>
+                </div>
+
+                <div class="hazard-bar-row">
+                  <div class="h-label">
+                    <span>Cluster 1 (Baseline Motion)</span>
+                    <strong>1.95% Emergency Stop Rate (39 stops / 1,998 cycles)</strong>
+                  </div>
+                  <div class="h-track"><div class="h-fill fill-safe" style="width: 19.5%;"></div></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="callout-note mt-3">
+              <strong>Methodological Significance:</strong> This proves genuine unsupervised discovery. The algorithm received zero safety labels during fitting, yet autonomously separated benign robotic operations from high-stress regimes susceptible to mechanical protection trips.
+            </div>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- VIEW 5: MODEL COMPARISON STUDIO -->
+      <section class="page-view" id="view-compare">
+        <div class="lab-header">
+          <div class="lab-title-group">
+            <div class="lab-badge studio-badge">Studio Benchmark</div>
+            <h1>Model Comparison Studio</h1>
+            <p>Unified benchmark across all 22 algorithms evaluated in the Capstone project.</p>
+          </div>
+
+          <div class="studio-actions">
+            <button class="btn btn-secondary" id="btnExportCSV">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+              Export CSV
+            </button>
+          </div>
+        </div>
+
+        <!-- Studio Filter Pills -->
+        <div class="filter-pills-bar">
+          <button class="filter-pill active" data-filter="all">All Disciplines (22)</button>
+          <button class="filter-pill" data-filter="regression">Regression (10)</button>
+          <button class="filter-pill" data-filter="classification">Classification (10)</button>
+          <button class="filter-pill" data-filter="clustering">Clustering (2)</button>
+        </div>
+
+        <!-- Directionality Guide -->
+        <div class="directionality-legend">
+          <span class="legend-tag"><strong>↑ Higher is Better:</strong> R², Accuracy, Precision, Recall, F1, ROC-AUC, Silhouette, Calinski-Harabasz</span>
+          <span class="legend-tag"><strong>↓ Lower is Better:</strong> RMSE, MAE, Davies-Bouldin</span>
+        </div>
+
+        <!-- Full Studio Table -->
+        <div class="panel-card mt-3">
+          <div class="table-responsive">
+            <table class="data-table" id="studioTable">
+              <thead>
+                <tr>
+                  <th>Track</th>
+                  <th>Algorithm</th>
+                  <th>Primary Metric</th>
+                  <th>Secondary Metric</th>
+                  <th>Accuracy / Error</th>
+                  <th>Status</th>
+                  <th>Phase</th>
+                </tr>
+              </thead>
+              <tbody id="studioTableBody">
+                <!-- Rendered dynamically via JS -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- VIEW 6: DATASET EXPLORER -->
+      <section class="page-view" id="view-datasets">
+        <div class="lab-header">
+          <div class="lab-title-group">
+            <div class="lab-badge datasets-badge">Data Repository</div>
+            <h1>Dataset Explorer</h1>
+            <p>Inspect dataset schemas, missing value strategies, and feature pipelines for all three capstone tracks.</p>
+          </div>
+        </div>
+
+        <!-- Dataset Tabs -->
+        <div class="tab-bar">
+          <button class="tab-btn active" data-tab="ds-airquality">1. UCI Air Quality (Regression)</button>
+          <button class="tab-btn" data-tab="ds-credit">2. UCI Credit Approval (Classification)</button>
+          <button class="tab-btn" data-tab="ds-robot">3. UR3 Robotic Telemetry (Clustering)</button>
+        </div>
+
+        <!-- DATASET 1: Air Quality -->
+        <div class="tab-content active" id="tab-ds-airquality">
+          <div class="dataset-card panel-card">
+            <div class="dataset-header-row">
+              <div>
+                <h2>UCI Air Quality Chemical Multi-Sensor Dataset</h2>
+                <small class="text-muted">Recorded from an Italian city field station at road level (March 2004 – April 2005)</small>
+              </div>
+              <a href="https://archive.ics.uci.edu/dataset/360/air+quality" target="_blank" class="btn btn-xs btn-secondary">UCI Repo ↗</a>
+            </div>
+
+            <div class="dataset-meta-chips mt-2">
+              <span class="meta-chip">Instances: <strong>9,357</strong></span>
+              <span class="meta-chip">Features: <strong>13 Sensor Channels</strong></span>
+              <span class="meta-chip">Target: <strong>C6H6(GT) Benzene (μg/m³)</strong></span>
+              <span class="meta-chip">Task: <strong>Continuous Supervised Regression</strong></span>
+            </div>
+
+            <h4 class="mt-3">Preprocessing & Pipeline Integrity:</h4>
+            <div class="pipeline-flow">
+              <div class="pipe-box">
+                <strong>1. Sentinel Cleansing</strong>
+                <p>-200 missing sensor flags replaced via training-set median.</p>
+              </div>
+              <div class="pipe-arrow">→</div>
+              <div class="pipe-box">
+                <strong>2. Train-Test Isolation</strong>
+                <p>80/20 random stratified split; zero test data leakage.</p>
+              </div>
+              <div class="pipe-arrow">→</div>
+              <div class="pipe-box">
+                <strong>3. Standardization</strong>
+                <p>StandardScaler fit strictly on training fold; test set transformed with frozen stats.</p>
+              </div>
+            </div>
+
+            <h4 class="mt-3">Sample Dataset Records:</h4>
+            <div class="table-responsive">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Date/Time</th>
+                    <th>CO(GT)</th>
+                    <th>PT08.S1</th>
+                    <th>C6H6(GT) [Target]</th>
+                    <th>PT08.S2</th>
+                    <th>NOx(GT)</th>
+                    <th>NO2(GT)</th>
+                    <th>T (°C)</th>
+                    <th>RH (%)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>10/03/2004 18:00</td>
+                    <td>2.6 mg/m³</td>
+                    <td>1360</td>
+                    <td class="text-accent"><strong>11.9 μg/m³</strong></td>
+                    <td>1046</td>
+                    <td>166 ppb</td>
+                    <td>113 μg/m³</td>
+                    <td>13.6 °C</td>
+                    <td>48.9%</td>
+                  </tr>
+                  <tr>
+                    <td>10/03/2004 19:00</td>
+                    <td>2.0 mg/m³</td>
+                    <td>1292</td>
+                    <td class="text-accent"><strong>9.4 μg/m³</strong></td>
+                    <td>955</td>
+                    <td>103 ppb</td>
+                    <td>92 μg/m³</td>
+                    <td>13.3 °C</td>
+                    <td>47.7%</td>
+                  </tr>
+                  <tr>
+                    <td>10/03/2004 20:00</td>
+                    <td>2.2 mg/m³</td>
+                    <td>1402</td>
+                    <td class="text-accent"><strong>9.0 μg/m³</strong></td>
+                    <td>939</td>
+                    <td>131 ppb</td>
+                    <td>114 μg/m³</td>
+                    <td>11.9 °C</td>
+                    <td>54.0%</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- DATASET 2: Credit Approval -->
+        <div class="tab-content" id="tab-ds-credit">
+          <div class="dataset-card panel-card">
+            <div class="dataset-header-row">
+              <div>
+                <h2>UCI Credit Approval Dataset (crx.data)</h2>
+                <small class="text-muted">Anonymized credit card applications submitted to major financial institutions</small>
+              </div>
+              <a href="https://archive.ics.uci.edu/dataset/27/credit+approval" target="_blank" class="btn btn-xs btn-secondary">UCI Repo ↗</a>
+            </div>
+
+            <div class="dataset-meta-chips mt-2">
+              <span class="meta-chip">Instances: <strong>690 Applications</strong></span>
+              <span class="meta-chip">Features: <strong>15 Categorical & Numerical</strong></span>
+              <span class="meta-chip">Target: <strong>A16: + (Approved) / − (Rejected)</strong></span>
+              <span class="meta-chip">Task: <strong>Binary Classification</strong></span>
+            </div>
+
+            <h4 class="mt-3">Preprocessing & Pipeline Integrity:</h4>
+            <div class="pipeline-flow">
+              <div class="pipe-box">
+                <strong>1. Categorical Encoding</strong>
+                <p>OneHotEncoder fitted on training set with handle_unknown='ignore'.</p>
+              </div>
+              <div class="pipe-arrow">→</div>
+              <div class="pipe-box">
+                <strong>2. Dual Imputation</strong>
+                <p>Median imputer for numericals, most-frequent for categoricals.</p>
+              </div>
+              <div class="pipe-arrow">→</div>
+              <div class="pipe-box">
+                <strong>3. Balanced Scaling</strong>
+                <p>StandardScaler for numeric distributions; zero label leakage.</p>
+              </div>
+            </div>
+
+            <h4 class="mt-3">Schema Key & Significant Predictors:</h4>
+            <div class="table-responsive">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Column ID</th>
+                    <th>Underlying Feature</th>
+                    <th>Type</th>
+                    <th>Empirical Impact</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><strong>A9</strong></td>
+                    <td>Prior Default / Verified Credit Card History ('t'/'f')</td>
+                    <td>Binary Categorical</td>
+                    <td>41.2% model importance; 78.7% approval for 't' vs 7.0% for 'f'</td>
+                  </tr>
+                  <tr>
+                    <td><strong>A11</strong></td>
+                    <td>Credit Score Tradelines Count</td>
+                    <td>Numerical Discrete</td>
+                    <td>14.5% model importance; higher tradelines correlate with approval</td>
+                  </tr>
+                  <tr>
+                    <td><strong>A8</strong></td>
+                    <td>Years in Continuous Employment</td>
+                    <td>Continuous Float</td>
+                    <td>11.2% model importance; stability metric</td>
+                  </tr>
+                  <tr>
+                    <td><strong>A16</strong></td>
+                    <td>Decision Outcome (+ / −)</td>
+                    <td>Binary Target</td>
+                    <td>Balanced: 307 Approved (44.5%), 383 Rejected (55.5%)</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- DATASET 3: UR3 Robotic Telemetry -->
+        <div class="tab-content" id="tab-ds-robot">
+          <div class="dataset-card panel-card">
+            <div class="dataset-header-row">
+              <div>
+                <h2>Universal Robots UR3 Telemetry Dataset</h2>
+                <small class="text-muted">High-frequency industrial manipulator joint currents, velocities, and safety stops</small>
+              </div>
+              <span class="badge">Repository File: data/clustering/ur3.xlsx</span>
+            </div>
+
+            <div class="dataset-meta-chips mt-2">
+              <span class="meta-chip">Instances: <strong>7,409 Time-Series Frames</strong></span>
+              <span class="meta-chip">Features: <strong>19 Sensor Channels</strong></span>
+              <span class="meta-chip">Target: <strong>Unsupervised (Zero Label Leakage)</strong></span>
+              <span class="meta-chip">Ground-Truth Check: <strong>Robot_ProtectiveStop (Post-hoc only)</strong></span>
+            </div>
+
+            <h4 class="mt-3">Sensors & Preprocessing Pipeline:</h4>
+            <div class="pipeline-flow">
+              <div class="pipe-box">
+                <strong>1. 19 Joint Sensors</strong>
+                <p>Currents, tool voltages, and temperatures across joints 0–5.</p>
+              </div>
+              <div class="pipe-arrow">→</div>
+              <div class="pipe-box">
+                <strong>2. Median Imputation</strong>
+                <p>Null values imputed using training median values.</p>
+              </div>
+              <div class="pipe-arrow">→</div>
+              <div class="pipe-box">
+                <strong>3. Unsupervised Clustering</strong>
+                <p>K-Means & Hierarchical fitting strictly without safety stop labels.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </section>
+
     </main>
 
   </div>
 
-  <!-- ==========================================================================
-       Interactive Inference Modals
-       ========================================================================== -->
-  
-  <!-- Modal 1: Classification (Credit Approval Prediction) -->
-  <div class="modal-overlay" id="classificationModal">
-    <div class="modal-dialog">
-      <div class="modal-header">
-        <div>
-          <h3>Credit Approval Predictor</h3>
-          <p style="font-size: 12px; color: var(--text-muted);">Tuned Random Forest Ensemble Classifier (Review 2 Model)</p>
-        </div>
-        <button class="modal-close" data-close="classificationModal">&times;</button>
-      </div>
-
-      <div class="preset-btn-bar">
-        <span style="font-size: 12px; color: var(--text-muted); align-self: center;">Quick Presets:</span>
-        <button class="preset-btn" id="presetCreditApprove">🌟 Prime Applicant (Approve)</button>
-        <button class="preset-btn" id="presetCreditReject">⚠️ High-Risk Applicant (Reject)</button>
-      </div>
-
-      <form id="creditApprovalForm">
-        <div class="form-grid">
-          <div class="form-group">
-            <label>Applicant Age (A2)</label>
-            <input type="number" id="classA2" step="0.5" value="32.5">
-          </div>
-          <div class="form-group">
-            <label>Debt Ratio (A3)</label>
-            <input type="number" id="classA3" step="0.1" value="3.5">
-          </div>
-          <div class="form-group">
-            <label>Years Employed (A8)</label>
-            <input type="number" id="classA8" step="0.25" value="4.0">
-          </div>
-          <div class="form-group">
-            <label>Credit Score / Active Lines (A11)</label>
-            <input type="number" id="classA11" step="1" value="3">
-          </div>
-          <div class="form-group">
-            <label>Credit History / Verification (A9)</label>
-            <select id="classA9">
-              <option value="t" selected>Established Credit History (t - Verified)</option>
-              <option value="f">No History / Prior Default (f - Unverified)</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label>Currently Employed (A10)</label>
-            <select id="classA10">
-              <option value="t" selected>Employed (t)</option>
-              <option value="f">Unemployed (f)</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label>Annual Income (A15)</label>
-            <input type="number" id="classA15" step="100" value="2500">
-          </div>
-          <div class="form-group">
-            <label>Postal Code / Numeric (A14)</label>
-            <input type="number" id="classA14" step="10" value="160">
-          </div>
-        </div>
-
-        <button type="submit" class="btn-predict">
-          Compute Approval Probability
-        </button>
-      </form>
-
-      <div class="inference-result-box" id="creditResultBox">
-        <!-- Result rendered by app.js -->
-      </div>
-    </div>
-  </div>
-
-  <!-- Modal 2: Clustering (UR3 Robot Telemetry Diagnostics) -->
-  <div class="modal-overlay" id="clusteringModal">
-    <div class="modal-dialog" style="max-width: 920px;">
-      <div class="modal-header">
-        <div>
-          <h3>UR3 Robotic Telemetry Diagnostics</h3>
-          <p style="font-size: 12px; color: var(--text-muted);">Unsupervised K-Means & Real-time 2D PCA Cluster Projection (Review 2 Rubric B1, B3)</p>
-        </div>
-        <button class="modal-close" data-close="clusteringModal">&times;</button>
-      </div>
-
-      <div class="modal-split-layout">
-        <div class="modal-form-col">
-          <div class="preset-btn-bar">
-            <span style="font-size: 12px; color: var(--text-muted); align-self: center;">Presets:</span>
-            <button class="preset-btn" id="presetRobotNormal">🟢 Baseline Motion</button>
-            <button class="preset-btn" id="presetRobotStress">🔴 High-Torque Stress</button>
-          </div>
-
-          <form id="robotTelemetryForm">
-            <div class="form-grid">
-              <div class="form-group">
-                <label>Base Current (Current_J0, A)</label>
-                <input type="number" id="currJ0" step="0.1" value="-0.5">
-              </div>
-              <div class="form-group">
-                <label>Shoulder Current (Current_J1, A)</label>
-                <input type="number" id="currJ1" step="0.1" value="-1.2">
-              </div>
-              <div class="form-group">
-                <label>Elbow Current (Current_J2, A)</label>
-                <input type="number" id="currJ2" step="0.1" value="0.8">
-              </div>
-              <div class="form-group">
-                <label>Tool Current (Tool_current, A)</label>
-                <input type="number" id="toolCurr" step="0.05" value="0.2">
-              </div>
-              <div class="form-group">
-                <label>Base Speed (Speed_J0, rad/s)</label>
-                <input type="number" id="speedJ0" step="0.05" value="0.15">
-              </div>
-              <div class="form-group">
-                <label>Joint Temp T0 (°C)</label>
-                <input type="number" id="tempT0" step="0.5" value="42.0">
-              </div>
-            </div>
-
-            <button type="submit" class="btn-predict">
-              Diagnose Operating Cluster & Hazard Risk
-            </button>
-          </form>
-
-          <div class="inference-result-box" id="robotResultBox">
-            <!-- Result rendered by app.js -->
-          </div>
-        </div>
-
-        <!-- Right: Real-time 2D PCA Cluster Map Canvas -->
-        <div class="modal-viz-col">
-          <div class="pca-map-card">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-              <span style="font-size: 12px; font-weight: 700; color: #fff; text-transform: uppercase;">2D PCA Cluster Map (UR3 Sensor Subspace)</span>
-              <span style="font-size: 11px; color: var(--accent-amber); font-weight: 600;">PC1+PC2: 48.0%</span>
-            </div>
-            <div class="pca-canvas-container">
-              <canvas id="pcaClusterCanvas" width="400" height="280"></canvas>
-            </div>
-            <div class="pca-legend">
-              <div class="pca-legend-item"><span class="legend-dot" style="background: #ff7a3d;"></span> Cluster 0: Hazard Risk (4.76%)</div>
-              <div class="pca-legend-item"><span class="legend-dot" style="background: #06b6d4;"></span> Cluster 1: Baseline Motion (1.95%)</div>
-              <div class="pca-legend-item"><span class="legend-dot pulse-target" style="background: #ffffff;"></span> ★ Current Telemetry</div>
-            </div>
-            <p style="font-size: 11px; color: var(--text-muted); line-height: 1.5; margin-top: 10px;">
-              Points represent 593 preprocessed robot cycles. The pulsating star indicates the real-time PCA projection of your current inputs.
-            </p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Modal 3: Regression (Air Quality Benzene Estimator) -->
-  <div class="modal-overlay" id="regressionModal">
-    <div class="modal-dialog">
-      <div class="modal-header">
-        <div>
-          <h3>Air Quality Benzene Estimator</h3>
-          <p style="font-size: 12px; color: var(--text-muted);">Tuned Random Forest Regressor on UCI Telemetry</p>
-        </div>
-        <button class="modal-close" data-close="regressionModal">&times;</button>
-      </div>
-
-      <form id="regressionForm">
-        <div class="form-grid">
-          <div class="form-group">
-            <label>CO Sensor (PT08.S1, CO)</label>
-            <input type="number" id="regCO" step="5" value="1360">
-          </div>
-          <div class="form-group">
-            <label>NMHC Sensor (PT08.S2, NMHC)</label>
-            <input type="number" id="regNMHC" step="5" value="1046">
-          </div>
-          <div class="form-group">
-            <label>NOx Sensor (PT08.S3, NOx)</label>
-            <input type="number" id="regNOx" step="5" value="1056">
-          </div>
-          <div class="form-group">
-            <label>Ambient Temperature (°C)</label>
-            <input type="number" id="regTemp" step="0.2" value="13.6">
-          </div>
-          <div class="form-group">
-            <label>Relative Humidity (%)</label>
-            <input type="number" id="regRH" step="0.5" value="48.9">
-          </div>
-          <div class="form-group">
-            <label>Absolute Humidity (AH)</label>
-            <input type="number" id="regAH" step="0.01" value="0.758">
-          </div>
-        </div>
-
-        <button type="submit" class="btn-predict">
-          Estimate Benzene Concentration (C6H6)
-        </button>
-      </form>
-
-      <div class="inference-result-box" id="regressionResultBox">
-        <!-- Result rendered by app.js -->
-      </div>
-    </div>
-  </div>
-
-  <!-- Modal 4: Model Deep-Dive Inspection Drawer -->
-  <div class="modal-overlay" id="modelDetailsModal">
-    <div class="modal-dialog" style="max-width: 720px;">
-      <div class="modal-header">
-        <div>
-          <h3 id="detailModelTitle">Model Architecture & Diagnostics</h3>
-          <p id="detailModelTrack" style="font-size: 12px; color: var(--text-muted);">Track Details</p>
-        </div>
-        <button class="modal-close" data-close="modelDetailsModal">&times;</button>
-      </div>
-
-      <div id="detailModelBody">
-        <!-- Dynamically rendered by app.js -->
-      </div>
-    </div>
-  </div>
-
-  <!-- System Info Modal -->
-  <div class="modal-overlay" id="infoModal">
-    <div class="modal-dialog">
-      <div class="modal-header">
-        <h3>23CSE301 Capstone System Info</h3>
-        <button class="modal-close" data-close="infoModal">&times;</button>
-      </div>
-      <div style="font-size: 13px; line-height: 1.7; color: var(--text-secondary);">
-        <p><strong style="color: #fff;">Course:</strong> 23CSE301 Machine Learning Capstone</p>
-        <p><strong style="color: #fff;">Review 2 Deliverables:</strong> Random Forest Classifier & K-Means Unsupervised Clustering</p>
-        <p><strong style="color: #fff;">Datasets:</strong> Credit Approval (`crx.data`), UR3 Telemetry (`ur3.xlsx`), Air Quality UCI (`AirQualityUCI.csv`)</p>
-        <p><strong style="color: #fff;">Architecture:</strong> Zero-leakage preprocessing pipelines, StandardScaler fitted strictly on train sets, 5-fold CV, and `.joblib` model persistence.</p>
-      </div>
-    </div>
-  </div>
-
-  <!-- Application Logic -->
+  <!-- Scripts -->
   <script src="app.js"></script>
 </body>
 </html>
