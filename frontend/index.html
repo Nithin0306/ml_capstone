@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>23CSE301 ML Capstone — Intelligence & Inference Dashboard</title>
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div class="app-shell">
+    
+    <!-- Left Slim Icon Dock -->
+    <aside class="side-dock">
+      <div class="dock-logo" id="logoBtn" title="23CSE301 ML Capstone">
+        <!-- Abstract Cube / Neural Logo SVG -->
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+        </svg>
+      </div>
+
+      <nav class="dock-nav">
+        <!-- Overview / Dashboard -->
+        <button class="dock-btn active" data-view="dashboard" data-tooltip="Dashboard Overview">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="3" width="7" height="9" rx="1.5"></rect>
+            <rect x="14" y="3" width="7" height="5" rx="1.5"></rect>
+            <rect x="14" y="12" width="7" height="9" rx="1.5"></rect>
+            <rect x="3" y="16" width="7" height="5" rx="1.5"></rect>
+          </svg>
+        </button>
+
+        <!-- Classification Track -->
+        <button class="dock-btn" data-action="open-classification" data-tooltip="Credit Approval (Random Forest)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
+            <line x1="1" y1="10" x2="23" y2="10"></line>
+            <circle cx="6" cy="15" r="1"></circle>
+          </svg>
+          <span class="badge-dot"></span>
+        </button>
+
+        <!-- Clustering Track -->
+        <button class="dock-btn" data-action="open-clustering" data-tooltip="UR3 Robot Diagnostics (K-Means)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="18" cy="5" r="3"></circle>
+            <circle cx="6" cy="12" r="3"></circle>
+            <circle cx="18" cy="19" r="3"></circle>
+            <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+            <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+          </svg>
+        </button>
+
+        <!-- Regression Track -->
+        <button class="dock-btn" data-action="open-regression" data-tooltip="Air Quality Regressor">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+          </svg>
+        </button>
+
+        <!-- Leaderboard Table -->
+        <button class="dock-btn" data-action="scroll-leaderboard" data-tooltip="Benchmark Leaderboard">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="20" x2="18" y2="10"></line>
+            <line x1="12" y1="20" x2="12" y2="4"></line>
+            <line x1="6" y1="20" x2="6" y2="14"></line>
+          </svg>
+        </button>
+      </nav>
+
+      <div class="dock-footer">
+        <!-- Live API Server Status Indicator -->
+        <button class="dock-btn" id="statusIndicatorBtn" data-tooltip="Backend: Checking...">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+            <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+          </svg>
+          <span class="badge-dot" id="serverLiveDot" style="background: #10b981; box-shadow: 0 0 8px #10b981;"></span>
+        </button>
+
+        <!-- Info / About -->
+        <button class="dock-btn" id="infoBtn" data-tooltip="System Info">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="12" y1="16" x2="12" y2="12"></line>
+            <line x1="12" y1="8" x2="12.01" y2="8"></line>
+          </svg>
+        </button>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="main-wrapper">
+      
+      <!-- Top Navigation Header -->
+      <header class="top-header">
+        <div class="header-title-block">
+          <h1>ML Capstone Intelligence</h1>
+          <p>
+            <span>Review 2 Production Models</span>
+            <span>•</span>
+            <span style="color: var(--accent-emerald);">Live Inferences Ready</span>
+          </p>
+        </div>
+
+        <div class="header-actions">
+          <div class="search-box">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+            <input type="text" id="modelSearchInput" placeholder="Search algorithms...">
+          </div>
+
+          <button class="icon-circle-btn" id="notificationsBtn" title="System Alerts">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+              <polyline points="22,6 12,13 2,6"></polyline>
+            </svg>
+          </button>
+
+          <div class="profile-pill" title="Amrita School of Computing">
+            <div class="avatar-badge">ML</div>
+            <div class="profile-info">
+              <span>Capstone Team 3</span>
+              <small>23CSE301 Group</small>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- Dashboard Main Grid -->
+      <div class="dashboard-grid">
+        
+        <!-- Hero Showcase Card -->
+        <section class="glass-card hero-card">
+          <!-- Background Geometric Neural Rings -->
+          <svg class="hero-rings" viewBox="0 0 100 100">
+            <circle cx="50" cy="50" r="46"/>
+            <circle cx="50" cy="50" r="34" stroke-dasharray="4 3"/>
+            <circle cx="50" cy="50" r="22"/>
+          </svg>
+
+          <div class="hero-content">
+            <div class="pill-tag">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+              </svg>
+              Review 2 Production Models
+            </div>
+
+            <h2 class="hero-title">Optimize Your Predictions</h2>
+            <p class="hero-desc">
+              Integrated multi-track ML pipelines for Credit Approval Classification (Tuned Random Forest), UR3 Robotic Telemetry Diagnostics (K-Means & PCA), and Air Quality Regression.
+            </p>
+
+            <div style="display: flex; gap: 12px; align-items: center;">
+              <button class="hero-cta-btn" id="heroStartBtn">
+                <span>Run Live Inference</span>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                  <polyline points="12 5 19 12 12 19"></polyline>
+                </svg>
+              </button>
+
+              <button class="filter-tab" id="viewDocsBtn" style="padding: 12px 20px;">
+                Documentation
+              </button>
+            </div>
+          </div>
+
+          <!-- Floating Frosted-Glass Metric Bar -->
+          <div class="hero-stats-glass-bar">
+            <div class="stat-item">
+              <div class="stat-val" id="metricRocAuc">96.2%</div>
+              <div class="stat-label">
+                <span class="stat-dot cyan"></span>
+                <span>ROC-AUC (RF)</span>
+              </div>
+            </div>
+
+            <div class="stat-item">
+              <div class="stat-val" id="metricSilhouette">0.312</div>
+              <div class="stat-label">
+                <span class="stat-dot pink"></span>
+                <span>Silhouette (KM)</span>
+              </div>
+            </div>
+
+            <div class="stat-item">
+              <div class="stat-val" id="metricR2">0.999</div>
+              <div class="stat-label">
+                <span class="stat-dot amber"></span>
+                <span>R² Score (Reg)</span>
+              </div>
+            </div>
+
+            <div class="stat-item">
+              <div class="stat-val">22</div>
+              <div class="stat-label">
+                <span class="stat-dot emerald"></span>
+                <span>Evaluated Models</span>
+              </div>
+            </div>
+
+            <button class="stat-action-btn" id="statCycleBtn" title="Cycle Metric Views">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="9 18 15 12 9 6"></polyline>
+              </svg>
+            </button>
+          </div>
+        </section>
+
+        <!-- Right Side Analytics Cards -->
+        <aside class="right-column">
+          
+          <!-- Card 1: Active Users / Model Inference Confidence -->
+          <div class="glass-card analytics-card">
+            <div class="card-header-row">
+              <h3>
+                <span>Model Confidence Trend</span>
+                <span style="font-size: 14px;">💡</span>
+              </h3>
+              <span style="font-size: 12px; color: var(--text-muted);">5-Fold CV</span>
+            </div>
+
+            <div class="chart-container">
+              <canvas id="confidenceSparklineCanvas"></canvas>
+              <div class="chart-badge">
+                <span style="color: var(--accent-amber);">●</span>
+                <span>98.4% Peak</span>
+              </div>
+            </div>
+
+            <div style="display: flex; justify-content: space-between; font-size: 11px; color: var(--text-muted); margin-top: 10px;">
+              <span>Fold 1</span>
+              <span>Fold 2</span>
+              <span>Fold 3</span>
+              <span>Fold 4</span>
+              <span>Fold 5</span>
+            </div>
+          </div>
+
+          <!-- Card 2: Latest Sales / Robot Hazard Index -->
+          <div class="glass-card analytics-card">
+            <div class="card-header-row">
+              <h3>
+                <span>Safety Stress Index</span>
+              </h3>
+              <div class="hazard-gain-pill warning">
+                <span>▲ 2.4× Hazard Ratio</span>
+              </div>
+            </div>
+
+            <div class="hazard-card-content">
+              <div class="hazard-metric-group">
+                <div class="hazard-big-val">4.76%</div>
+                <div class="hazard-subtext">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                    <line x1="12" y1="9" x2="12" y2="13"></line>
+                    <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                  </svg>
+                  <span>Cluster 0 Protective Stop Rate</span>
+                </div>
+              </div>
+
+              <!-- 3D Sensor Visual Asset Preview -->
+              <div class="asset-preview-box" id="robotAssetBox" title="Click to view UR3 Telemetry Diagnostics">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                  <rect x="4" y="4" width="16" height="16" rx="3"></rect>
+                  <circle cx="9" cy="9" r="1.5"></circle>
+                  <circle cx="15" cy="9" r="1.5"></circle>
+                  <path d="M9 15h6"></path>
+                </svg>
+                <span>UR3 Sensor</span>
+              </div>
+            </div>
+          </div>
+
+        </aside>
+
+        <!-- Bottom Card: Benchmark Leaderboard Table -->
+        <section class="glass-card table-card" id="leaderboardSection">
+          <div class="table-header-row">
+            <div>
+              <h2>Benchmark Leaderboard: All Evaluated Algorithms</h2>
+              <p style="font-size: 13px; color: var(--text-muted); margin-top: 2px;">
+                Consolidated results across Review 1 & Review 2 with internal and cross-validation metrics
+              </p>
+            </div>
+
+            <div class="table-filters">
+              <button class="filter-tab active" data-filter="all">All Tracks</button>
+              <button class="filter-tab" data-filter="Classification">Classification</button>
+              <button class="filter-tab" data-filter="Clustering">Clustering</button>
+              <button class="filter-tab" data-filter="Regression">Regression</button>
+            </div>
+          </div>
+
+          <table class="leaderboard-table">
+            <thead>
+              <tr>
+                <th>Model / Track</th>
+                <th>Primary Metric</th>
+                <th>Secondary Metric</th>
+                <th>Validation / Accuracy</th>
+                <th>Performance Sparkline</th>
+                <th>Status</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="leaderboardTableBody">
+              <!-- Dynamically populated from leaderboard.json or fallback -->
+            </tbody>
+          </table>
+        </section>
+
+      </div>
+    </main>
+
+  </div>
+
+  <!-- ==========================================================================
+       Interactive Inference Modals
+       ========================================================================== -->
+  
+  <!-- Modal 1: Classification (Credit Approval Prediction) -->
+  <div class="modal-overlay" id="classificationModal">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <div>
+          <h3>Credit Approval Predictor</h3>
+          <p style="font-size: 12px; color: var(--text-muted);">Tuned Random Forest Ensemble Classifier (Review 2 Model)</p>
+        </div>
+        <button class="modal-close" data-close="classificationModal">&times;</button>
+      </div>
+
+      <div class="preset-btn-bar">
+        <span style="font-size: 12px; color: var(--text-muted); align-self: center;">Quick Presets:</span>
+        <button class="preset-btn" id="presetCreditApprove">🌟 Prime Applicant (Approve)</button>
+        <button class="preset-btn" id="presetCreditReject">⚠️ High-Risk Applicant (Reject)</button>
+      </div>
+
+      <form id="creditApprovalForm">
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Applicant Age (A2)</label>
+            <input type="number" id="classA2" step="0.5" value="32.5">
+          </div>
+          <div class="form-group">
+            <label>Debt Ratio (A3)</label>
+            <input type="number" id="classA3" step="0.1" value="3.5">
+          </div>
+          <div class="form-group">
+            <label>Years Employed (A8)</label>
+            <input type="number" id="classA8" step="0.25" value="4.0">
+          </div>
+          <div class="form-group">
+            <label>Credit Score / Active Lines (A11)</label>
+            <input type="number" id="classA11" step="1" value="3">
+          </div>
+          <div class="form-group">
+            <label>Credit History / Verification (A9)</label>
+            <select id="classA9">
+              <option value="t" selected>Established Credit History (t - Verified)</option>
+              <option value="f">No History / Prior Default (f - Unverified)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Currently Employed (A10)</label>
+            <select id="classA10">
+              <option value="t" selected>Employed (t)</option>
+              <option value="f">Unemployed (f)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Annual Income (A15)</label>
+            <input type="number" id="classA15" step="100" value="2500">
+          </div>
+          <div class="form-group">
+            <label>Postal Code / Numeric (A14)</label>
+            <input type="number" id="classA14" step="10" value="160">
+          </div>
+        </div>
+
+        <button type="submit" class="btn-predict">
+          Compute Approval Probability
+        </button>
+      </form>
+
+      <div class="inference-result-box" id="creditResultBox">
+        <!-- Result rendered by app.js -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal 2: Clustering (UR3 Robot Telemetry Diagnostics) -->
+  <div class="modal-overlay" id="clusteringModal">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <div>
+          <h3>UR3 Robotic Telemetry Diagnostics</h3>
+          <p style="font-size: 12px; color: var(--text-muted);">Unsupervised K-Means & 2D PCA Anomaly Projection</p>
+        </div>
+        <button class="modal-close" data-close="clusteringModal">&times;</button>
+      </div>
+
+      <div class="preset-btn-bar">
+        <span style="font-size: 12px; color: var(--text-muted); align-self: center;">Telemetry Presets:</span>
+        <button class="preset-btn" id="presetRobotNormal">🟢 Baseline Routine Motion</button>
+        <button class="preset-btn" id="presetRobotStress">🔴 High-Torque Stress Cycle</button>
+      </div>
+
+      <form id="robotTelemetryForm">
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Base Joint Current (Current_J0, A)</label>
+            <input type="number" id="currJ0" step="0.1" value="-0.5">
+          </div>
+          <div class="form-group">
+            <label>Shoulder Joint Current (Current_J1, A)</label>
+            <input type="number" id="currJ1" step="0.1" value="-1.2">
+          </div>
+          <div class="form-group">
+            <label>Elbow Joint Current (Current_J2, A)</label>
+            <input type="number" id="currJ2" step="0.1" value="0.8">
+          </div>
+          <div class="form-group">
+            <label>Tool Current (Tool_current, A)</label>
+            <input type="number" id="toolCurr" step="0.05" value="0.2">
+          </div>
+          <div class="form-group">
+            <label>Base Angular Speed (Speed_J0, rad/s)</label>
+            <input type="number" id="speedJ0" step="0.05" value="0.15">
+          </div>
+          <div class="form-group">
+            <label>Joint Temperature T0 (°C)</label>
+            <input type="number" id="tempT0" step="0.5" value="42.0">
+          </div>
+        </div>
+
+        <button type="submit" class="btn-predict">
+          Diagnose Operating Cluster & Hazard Risk
+        </button>
+      </form>
+
+      <div class="inference-result-box" id="robotResultBox">
+        <!-- Result rendered by app.js -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal 3: Regression (Air Quality Benzene Estimator) -->
+  <div class="modal-overlay" id="regressionModal">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <div>
+          <h3>Air Quality Benzene Estimator</h3>
+          <p style="font-size: 12px; color: var(--text-muted);">Tuned Random Forest Regressor on UCI Telemetry</p>
+        </div>
+        <button class="modal-close" data-close="regressionModal">&times;</button>
+      </div>
+
+      <form id="regressionForm">
+        <div class="form-grid">
+          <div class="form-group">
+            <label>CO Sensor (PT08.S1, CO)</label>
+            <input type="number" id="regCO" step="5" value="1360">
+          </div>
+          <div class="form-group">
+            <label>NMHC Sensor (PT08.S2, NMHC)</label>
+            <input type="number" id="regNMHC" step="5" value="1046">
+          </div>
+          <div class="form-group">
+            <label>NOx Sensor (PT08.S3, NOx)</label>
+            <input type="number" id="regNOx" step="5" value="1056">
+          </div>
+          <div class="form-group">
+            <label>Ambient Temperature (°C)</label>
+            <input type="number" id="regTemp" step="0.2" value="13.6">
+          </div>
+          <div class="form-group">
+            <label>Relative Humidity (%)</label>
+            <input type="number" id="regRH" step="0.5" value="48.9">
+          </div>
+          <div class="form-group">
+            <label>Absolute Humidity (AH)</label>
+            <input type="number" id="regAH" step="0.01" value="0.758">
+          </div>
+        </div>
+
+        <button type="submit" class="btn-predict">
+          Estimate Benzene Concentration (C6H6)
+        </button>
+      </form>
+
+      <div class="inference-result-box" id="regressionResultBox">
+        <!-- Result rendered by app.js -->
+      </div>
+    </div>
+  </div>
+
+  <!-- System Info Modal -->
+  <div class="modal-overlay" id="infoModal">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3>23CSE301 Capstone System Info</h3>
+        <button class="modal-close" data-close="infoModal">&times;</button>
+      </div>
+      <div style="font-size: 13px; line-height: 1.7; color: var(--text-secondary);">
+        <p><strong style="color: #fff;">Course:</strong> 23CSE301 Machine Learning Capstone</p>
+        <p><strong style="color: #fff;">Review 2 Deliverables:</strong> Random Forest Classifier & K-Means Unsupervised Clustering</p>
+        <p><strong style="color: #fff;">Datasets:</strong> Credit Approval (`crx.data`), UR3 Telemetry (`ur3.xlsx`), Air Quality UCI (`AirQualityUCI.csv`)</p>
+        <p><strong style="color: #fff;">Architecture:</strong> Zero-leakage preprocessing pipelines, StandardScaler fitted strictly on train sets, 5-fold CV, and `.joblib` model persistence.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Application Logic -->
+  <script src="app.js"></script>
+</body>
+</html>

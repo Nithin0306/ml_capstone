@@ -136,7 +136,8 @@ class MLServerHandler(SimpleHTTPRequestHandler):
         sensor_cols = clust_artifact["sensor_cols"]
         vals = []
         for col in sensor_cols:
-            vals.append(float(data.get(col, 0.0)))
+            val = data.get(col, None)
+            vals.append(float(val) if val is not None else np.nan)
 
         vals_arr = np.array([vals])
         vals_imp = clust_artifact["imputer"].transform(vals_arr)
