@@ -425,7 +425,7 @@ def get_clustering_dendrogram():
         "method": "ward"
     }
 
-@app.post("/api/v1/clustering/elbow")
+@app.api_route("/api/v1/clustering/elbow", methods=["GET", "POST"])
 def get_clustering_elbow():
     return {
         "k_values": [2, 3, 4, 5, 6, 7, 8, 9, 10],

@@ -181,7 +181,7 @@ async function initData() {
     console.error("Failed to load experiments:", e);
   }
 
-  // Load Leaderboard Data for Studio
+  // Load Leaderboard Data for Studio & Overview Showcase
   try {
     const regRes = await fetch(`${API_BASE}/results/regression`).then(r => r.json());
     const classRes = await fetch(`${API_BASE}/results/classification`).then(r => r.json());
@@ -190,6 +190,48 @@ async function initData() {
     renderRegressionLeaderboard(regRes);
     renderClassificationLeaderboard(classRes);
     renderStudioTable();
+
+    // Dynamically populate the 4 Overview summary cards from live leaderboard
+    const bestReg = regRes.find(m => m.status.includes("Best")) || regRes[0];
+    if (bestReg) {
+      const r2El = document.getElementById("ovRegMetricVal");
+      const r2Sub = document.getElementById("ovRegMetricSub");
+      if (r2El) r2El.textContent = bestReg.primary_metric.replace("R²: ", "").trim();
+      if (r2Sub) r2Sub.textContent = `${bestReg.algorithm} (${bestReg.secondary_metric})`;
+    }
+
+    const bestClass = classRes.find(m => m.status.includes("Best")) || classRes[0];
+    if (bestClass) {
+      const aucEl = document.getElementById("ovClassMetricVal");
+      const aucSub = document.getElementById("ovClassMetricSub");
+      if (aucEl) aucEl.textContent = bestClass.primary_metric.replace("ROC-AUC: ", "").trim();
+      if (aucSub) aucSub.textContent = `${bestClass.algorithm} (${bestClass.accuracy}, ${bestClass.secondary_metric})`;
+    }
+
+    const bestClust = clustRes.find(m => m.algorithm.includes("K-Means")) || clustRes[0];
+    if (bestClust) {
+      const silEl = document.getElementById("ovClustMetricVal");
+      const silSub = document.getElementById("ovClustMetricSub");
+      if (silEl) silEl.textContent = bestClust.primary_metric.replace("Silhouette: ", "").trim();
+      if (silSub) silSub.textContent = `${bestClust.algorithm} (${bestClust.secondary_metric})`;
+    }
+
+    // Dynamic hazard ratio from UR3 telemetry clustering config
+    try {
+      const clustConf = await fetch(`${API_BASE}/clustering/config`).then(r => r.json());
+      const stats = clustConf.cluster_stats;
+      if (stats && stats["0"] && stats["1"]) {
+        const p0 = stats["0"].stop_percentage;
+        const p1 = stats["1"].stop_percentage;
+        const ratio = (p0 / Math.max(p1, 0.01)).toFixed(2);
+        const hzEl = document.getElementById("ovHazardMetricVal");
+        const hzSub = document.getElementById("ovHazardMetricSub");
+        if (hzEl) hzEl.textContent = `${ratio}×`;
+        if (hzSub) hzSub.textContent = `Cluster 0 (${p0}% Stops) vs Cluster 1 (${p1}% Stops)`;
+      }
+    } catch (ce) {
+      console.warn("Clustering config stats fetch failed:", ce);
+    }
   } catch (e) {
     console.error("Failed to load leaderboard data:", e);
   }
@@ -769,13 +811,16 @@ async function loadClassificationEvaluation(modelId) {
     const badge = document.getElementById("cmModelBadge");
     if (badge) badge.textContent = document.querySelector(`#classModelSelect option[value="${modelId}"]`)?.text.split(" [")[0] || modelId;
 
-    drawRocCurve(res.roc_auc);
+    const rocBadge = document.getElementById("classRocBadge");
+    if (rocBadge) rocBadge.textContent = `AUC: ${(res.roc_auc || 0).toFixed(3)}`;
+
+    drawRocCurve(res.fpr, res.tpr, res.roc_auc);
   } catch (err) {
     console.error("Failed to load classification evaluation:", err);
   }
 }
 
-function drawRocCurve(auc) {
+function drawRocCurve(fpr, tpr, auc) {
   const canvas = document.getElementById("classRocCanvas");
   if (!canvas) return;
   const ctx = canvas.getContext("2d");
@@ -783,7 +828,7 @@ function drawRocCurve(auc) {
   const h = canvas.height;
   ctx.clearRect(0, 0, w, h);
 
-  const pad = 35;
+  const pad = 40;
   // Background grid
   ctx.strokeStyle = "#22293a";
   ctx.lineWidth = 1;
@@ -803,21 +848,70 @@ function drawRocCurve(auc) {
   ctx.stroke();
   ctx.setLineDash([]);
 
-  // ROC Curve
-  ctx.strokeStyle = "#BF0C4F";
-  ctx.lineWidth = 2.5;
-  ctx.beginPath();
-  ctx.moveTo(pad, h - pad);
-  // Quadratic bezier approximating high ROC AUC
-  ctx.quadraticCurveTo(pad + 10, pad + 15, w - pad, pad);
-  ctx.stroke();
+  // Empirical ROC Curve
+  if (fpr && tpr && fpr.length >= 2) {
+    // Fill area under curve
+    ctx.beginPath();
+    ctx.moveTo(pad, h - pad);
+    for (let i = 0; i < fpr.length; i++) {
+      const x = pad + fpr[i] * (w - 2 * pad);
+      const y = h - pad - tpr[i] * (h - 2 * pad);
+      ctx.lineTo(x, y);
+    }
+    ctx.lineTo(pad + (fpr[fpr.length - 1] || 1) * (w - 2 * pad), h - pad);
+    ctx.closePath();
+    const grad = ctx.createLinearGradient(0, pad, 0, h - pad);
+    grad.addColorStop(0, "rgba(191, 12, 79, 0.3)");
+    grad.addColorStop(1, "rgba(191, 12, 79, 0.0)");
+    ctx.fillStyle = grad;
+    ctx.fill();
 
-  // Axis Labels
+    // ROC line
+    ctx.strokeStyle = "#BF0C4F";
+    ctx.lineWidth = 2.5;
+    ctx.beginPath();
+    for (let i = 0; i < fpr.length; i++) {
+      const x = pad + fpr[i] * (w - 2 * pad);
+      const y = h - pad - tpr[i] * (h - 2 * pad);
+      if (i === 0) ctx.moveTo(x, y);
+      else ctx.lineTo(x, y);
+    }
+    ctx.stroke();
+
+    // Empirical threshold points
+    ctx.fillStyle = "#BF0C4F";
+    for (let i = 0; i < fpr.length; i++) {
+      const x = pad + fpr[i] * (w - 2 * pad);
+      const y = h - pad - tpr[i] * (h - 2 * pad);
+      ctx.beginPath();
+      ctx.arc(x, y, 2.5, 0, Math.PI * 2);
+      ctx.fill();
+    }
+  } else {
+    // Fallback smooth curve
+    ctx.strokeStyle = "#BF0C4F";
+    ctx.lineWidth = 2.5;
+    ctx.beginPath();
+    ctx.moveTo(pad, h - pad);
+    ctx.quadraticCurveTo(pad + 10, pad + 15, w - pad, pad);
+    ctx.stroke();
+  }
+
+  // AUC Callout
+  ctx.fillStyle = "#f8fafc";
+  ctx.font = "bold 12px Inter";
+  ctx.fillText(`ROC-AUC = ${(auc || 0.967).toFixed(3)}`, pad + 20, pad + 25);
+
+  // Axis Labels & Ticks
   ctx.fillStyle = "#94a3b8";
   ctx.font = "11px Inter";
   ctx.fillText("False Positive Rate (1 − Specificity)", w / 2 - 80, h - 10);
+  ctx.fillText("0.0", pad - 8, h - pad + 16);
+  ctx.fillText("0.5", pad + (w - 2 * pad) / 2 - 8, h - pad + 16);
+  ctx.fillText("1.0", w - pad - 8, h - pad + 16);
+
   ctx.save();
-  ctx.translate(15, h / 2 + 30);
+  ctx.translate(14, h / 2 + 50);
   ctx.rotate(-Math.PI / 2);
   ctx.fillText("True Positive Rate (Recall)", 0, 0);
   ctx.restore();
@@ -1024,7 +1118,8 @@ function renderScatterCanvas() {
   };
 }
 
-function drawElbowPlot() {
+let cachedElbow = null;
+async function drawElbowPlot() {
   const canvas = document.getElementById("clustElbowCanvas");
   if (!canvas) return;
   const ctx = canvas.getContext("2d");
@@ -1032,63 +1127,128 @@ function drawElbowPlot() {
   const h = canvas.height;
   ctx.clearRect(0, 0, w, h);
 
-  const pad = 50;
-  const kVals = [2, 3, 4, 5, 6, 7, 8, 9, 10];
-  const inertias = [89200, 78100, 71500, 66400, 62100, 58900, 56200, 53800, 51700];
-  const minIn = 45000, maxIn = 95000;
+  if (!cachedElbow) {
+    try {
+      cachedElbow = await fetch(`${API_BASE}/clustering/elbow`).then(r => r.json());
+    } catch (err) {
+      console.error("Failed to fetch elbow data:", err);
+      return;
+    }
+  }
 
-  // Grid
+  const kVals = cachedElbow.k_values || [2, 3, 4, 5, 6, 7, 8, 9, 10];
+  const inertias = cachedElbow.inertias || [89200, 78100, 71500, 66400, 62100, 58900, 56200, 53800, 51700];
+  const sils = cachedElbow.silhouette_scores || [];
+  const optK = cachedElbow.optimal_k || 2;
+
+  const padLeft = 60;
+  const padRight = 60;
+  const padTop = 35;
+  const padBottom = 45;
+  const plotW = w - padLeft - padRight;
+  const plotH = h - padTop - padBottom;
+
+  const minIn = Math.min(...inertias) * 0.9;
+  const maxIn = Math.max(...inertias) * 1.05;
+
+  // Background Grid
   ctx.strokeStyle = "#1a202e";
   ctx.lineWidth = 1;
   for (let i = 0; i <= 5; i++) {
-    const y = pad + ((h - 2 * pad) / 5) * i;
-    ctx.beginPath(); ctx.moveTo(pad, y); ctx.lineTo(w - pad, y); ctx.stroke();
+    const y = padTop + (plotH / 5) * i;
+    ctx.beginPath(); ctx.moveTo(padLeft, y); ctx.lineTo(w - padRight, y); ctx.stroke();
   }
 
-  // Inertia line
+  // 1. Draw Inertia Line (Left Axis - Crimson)
   ctx.strokeStyle = "#BF0C4F";
   ctx.lineWidth = 3;
   ctx.beginPath();
   for (let i = 0; i < kVals.length; i++) {
-    const x = pad + (i / (kVals.length - 1)) * (w - 2 * pad);
-    const y = h - pad - ((inertias[i] - minIn) / (maxIn - minIn)) * (h - 2 * pad);
+    const x = padLeft + (i / (kVals.length - 1)) * plotW;
+    const y = padTop + plotH - ((inertias[i] - minIn) / (maxIn - minIn)) * plotH;
     if (i === 0) ctx.moveTo(x, y);
     else ctx.lineTo(x, y);
   }
   ctx.stroke();
 
-  // Points and optimal callout at k=2
+  // Inertia Points
   for (let i = 0; i < kVals.length; i++) {
-    const x = pad + (i / (kVals.length - 1)) * (w - 2 * pad);
-    const y = h - pad - ((inertias[i] - minIn) / (maxIn - minIn)) * (h - 2 * pad);
-    ctx.fillStyle = i === 0 ? "#10b981" : "#BF0C4F";
+    const x = padLeft + (i / (kVals.length - 1)) * plotW;
+    const y = padTop + plotH - ((inertias[i] - minIn) / (maxIn - minIn)) * plotH;
+    const isOpt = kVals[i] === optK;
+    ctx.fillStyle = isOpt ? "#10b981" : "#BF0C4F";
     ctx.beginPath();
-    ctx.arc(x, y, i === 0 ? 7 : 4.5, 0, Math.PI * 2);
+    ctx.arc(x, y, isOpt ? 7 : 4.5, 0, Math.PI * 2);
     ctx.fill();
 
     // X-axis text
     ctx.fillStyle = "#94a3b8";
     ctx.font = "11px Inter";
-    ctx.fillText(`k=${kVals[i]}`, x - 10, h - pad + 20);
+    ctx.fillText(`k=${kVals[i]}`, x - 10, padTop + plotH + 20);
   }
 
-  // Optimal annotation callout
-  ctx.fillStyle = "#10b981";
-  ctx.font = "bold 12px Inter";
-  ctx.fillText("★ Optimal Elbow (k = 2)", pad + 15, h - pad - ((inertias[0] - minIn) / (maxIn - minIn)) * (h - 2 * pad) - 15);
+  // 2. Draw Silhouette Line (Right Axis - Emerald/Cyan) if available
+  if (sils && sils.length === kVals.length) {
+    const minSil = 0.10;
+    const maxSil = 0.35;
+    ctx.strokeStyle = "#38bdf8";
+    ctx.lineWidth = 2;
+    ctx.setLineDash([3, 3]);
+    ctx.beginPath();
+    for (let i = 0; i < kVals.length; i++) {
+      const x = padLeft + (i / (kVals.length - 1)) * plotW;
+      const y = padTop + plotH - ((sils[i] - minSil) / (maxSil - minSil)) * plotH;
+      if (i === 0) ctx.moveTo(x, y);
+      else ctx.lineTo(x, y);
+    }
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    for (let i = 0; i < kVals.length; i++) {
+      const x = padLeft + (i / (kVals.length - 1)) * plotW;
+      const y = padTop + plotH - ((sils[i] - minSil) / (maxSil - minSil)) * plotH;
+      ctx.fillStyle = "#38bdf8";
+      ctx.beginPath();
+      ctx.arc(x, y, 3.5, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    // Secondary Y-axis label (Right)
+    ctx.save();
+    ctx.translate(w - 15, h / 2 + 50);
+    ctx.rotate(Math.PI / 2);
+    ctx.fillStyle = "#38bdf8";
+    ctx.font = "11px Inter";
+    ctx.fillText("Silhouette Score (dashed cyan)", 0, 0);
+    ctx.restore();
+  }
+
+  // Optimal Annotation Callout
+  const optIdx = kVals.indexOf(optK);
+  if (optIdx !== -1) {
+    const optX = padLeft + (optIdx / (kVals.length - 1)) * plotW;
+    const optY = padTop + plotH - ((inertias[optIdx] - minIn) / (maxIn - minIn)) * plotH;
+    ctx.fillStyle = "#10b981";
+    ctx.font = "bold 12px Inter";
+    const silText = sils[optIdx] ? ` (Sil: ${sils[optIdx].toFixed(4)})` : "";
+    ctx.fillText(`★ Optimal Elbow Inflection at k=${optK}${silText}`, optX + 15, optY - 12);
+  }
 
   // Axis Labels
   ctx.fillStyle = "#94a3b8";
   ctx.font = "12px Inter";
-  ctx.fillText("Number of Clusters (K)", w / 2 - 60, h - 10);
+  ctx.fillText("Number of Clusters (K)", w / 2 - 60, h - 8);
+
   ctx.save();
   ctx.translate(18, h / 2 + 50);
   ctx.rotate(-Math.PI / 2);
+  ctx.fillStyle = "#BF0C4F";
   ctx.fillText("Within-Cluster Sum of Squares (Inertia)", 0, 0);
   ctx.restore();
 }
 
-function drawDendrogram() {
+let cachedDendro = null;
+async function drawDendrogram() {
   const canvas = document.getElementById("clustDendroCanvas");
   if (!canvas) return;
   const ctx = canvas.getContext("2d");
@@ -1096,84 +1256,119 @@ function drawDendrogram() {
   const h = canvas.height;
   ctx.clearRect(0, 0, w, h);
 
-  const pad = 50;
-
-  // Draw illustrative hierarchical tree
-  ctx.strokeStyle = "#38bdf8";
-  ctx.lineWidth = 2;
-
-  // Draw sample tree branches
-  const leafCount = 16;
-  const step = (w - 2 * pad) / (leafCount - 1);
-  const leafY = h - pad;
-
-  const clusterAEnd = 10;
-  // Sub-branch Cluster A
-  for (let i = 0; i < clusterAEnd; i += 2) {
-    const x1 = pad + i * step;
-    const x2 = pad + (i + 1) * step;
-    const my = leafY - 40 - (i * 4);
-    ctx.strokeStyle = "#38bdf8";
-    ctx.beginPath();
-    ctx.moveTo(x1, leafY); ctx.lineTo(x1, my);
-    ctx.lineTo(x2, my); ctx.lineTo(x2, leafY);
-    ctx.stroke();
+  if (!cachedDendro) {
+    try {
+      cachedDendro = await fetch(`${API_BASE}/clustering/dendrogram`).then(r => r.json());
+    } catch (err) {
+      console.error("Failed to fetch dendrogram data:", err);
+      return;
+    }
   }
 
-  // Sub-branch Cluster B
-  for (let i = clusterAEnd; i < leafCount; i += 2) {
-    const x1 = pad + i * step;
-    const x2 = pad + (i + 1) * step;
-    const my = leafY - 45;
-    ctx.strokeStyle = "#f59e0b";
-    ctx.beginPath();
-    ctx.moveTo(x1, leafY); ctx.lineTo(x1, my);
-    ctx.lineTo(x2, my); ctx.lineTo(x2, leafY);
-    ctx.stroke();
+  const nodes = cachedDendro.nodes;
+  const cutThreshold = cachedDendro.cut_threshold || 3.8;
+  const n = (cachedDendro.sample_size) || (nodes.length + 1); // 40
+  const maxDist = Math.max(...nodes.map(node => node.distance), 16.0);
+
+  const padLeft = 60;
+  const padRight = 40;
+  const padTop = 30;
+  const padBottom = 50;
+  const plotW = w - padLeft - padRight;
+  const plotH = h - padTop - padBottom;
+
+  // Background grid lines (distance levels)
+  ctx.strokeStyle = "#1a202e";
+  ctx.lineWidth = 1;
+  for (let d = 0; d <= Math.ceil(maxDist); d += 4) {
+    const y = padTop + plotH - (d / maxDist) * plotH;
+    ctx.beginPath(); ctx.moveTo(padLeft, y); ctx.lineTo(w - padRight, y); ctx.stroke();
+    ctx.fillStyle = "#64748b";
+    ctx.font = "10px Inter";
+    ctx.fillText(d.toFixed(0), padLeft - 22, y + 3);
   }
 
-  // Major trunks
-  const midA = pad + (step * (clusterAEnd / 2));
-  const midB = pad + (step * (clusterAEnd + (leafCount - clusterAEnd) / 2));
-  const trunkY = pad + 60;
+  // Determine leaf ordering by in-order traversal to eliminate line crossings
+  function getLeaves(cid) {
+    if (cid < n) return [cid];
+    const node = nodes[cid - n];
+    return [...getLeaves(node.cluster_a), ...getLeaves(node.cluster_b)];
+  }
+  const leafOrder = getLeaves(n + nodes.length - 1);
+  const leafXMap = {};
+  const leafStep = plotW / (leafOrder.length - 1);
+  leafOrder.forEach((leafId, idx) => {
+    leafXMap[leafId] = padLeft + idx * leafStep;
+  });
 
-  ctx.strokeStyle = "#38bdf8";
-  ctx.beginPath();
-  ctx.moveTo(midA, leafY - 70); ctx.lineTo(midA, trunkY);
-  ctx.stroke();
+  // Calculate coordinates for all clusters
+  const clusterCoords = {};
+  for (let i = 0; i < n; i++) {
+    clusterCoords[i] = { x: leafXMap[i], y: padTop + plotH, color: null };
+  }
 
-  ctx.strokeStyle = "#f59e0b";
-  ctx.beginPath();
-  ctx.moveTo(midB, leafY - 50); ctx.lineTo(midB, trunkY);
-  ctx.stroke();
+  // Identify clusters at cut threshold to color subtrees
+  const rootNode = nodes[nodes.length - 1];
+  const cluster0Leaves = new Set(getLeaves(rootNode.cluster_a));
 
-  // Root merge
-  ctx.strokeStyle = "#64748b";
-  ctx.beginPath();
-  ctx.moveTo(midA, trunkY); ctx.lineTo(midB, trunkY);
-  ctx.moveTo((midA + midB) / 2, trunkY); ctx.lineTo((midA + midB) / 2, pad + 10);
-  ctx.stroke();
+  for (let i = 0; i < nodes.length; i++) {
+    const node = nodes[i];
+    const clusterId = n + i;
+    const childA = clusterCoords[node.cluster_a];
+    const childB = clusterCoords[node.cluster_b];
+    const mergeY = padTop + plotH - (node.distance / maxDist) * plotH;
+    const mergeX = (childA.x + childB.x) / 2;
 
-  // Cutoff threshold line (d = 3.8)
-  const cutY = trunkY + 15;
+    const isCutOver = node.distance >= cutThreshold;
+    // Determine subtree color
+    const anyLeaf = getLeaves(node.cluster_a)[0];
+    const branchColor = isCutOver ? "#64748b" : (cluster0Leaves.has(anyLeaf) ? "#38bdf8" : "#f59e0b");
+
+    ctx.strokeStyle = branchColor;
+    ctx.lineWidth = isCutOver ? 1.8 : 2.0;
+
+    // U-link from childA to childB at mergeY
+    ctx.beginPath();
+    ctx.moveTo(childA.x, childA.y);
+    ctx.lineTo(childA.x, mergeY);
+    ctx.lineTo(childB.x, mergeY);
+    ctx.lineTo(childB.x, childB.y);
+    ctx.stroke();
+
+    clusterCoords[clusterId] = { x: mergeX, y: mergeY, color: branchColor };
+  }
+
+  // Cutoff threshold dashed line
+  const cutY = padTop + plotH - (cutThreshold / maxDist) * plotH;
   ctx.strokeStyle = "#ef4444";
   ctx.lineWidth = 1.5;
   ctx.setLineDash([5, 4]);
   ctx.beginPath();
-  ctx.moveTo(pad - 10, cutY);
-  ctx.lineTo(w - pad + 10, cutY);
+  ctx.moveTo(padLeft - 10, cutY);
+  ctx.lineTo(w - padRight + 10, cutY);
   ctx.stroke();
   ctx.setLineDash([]);
 
   ctx.fillStyle = "#ef4444";
   ctx.font = "bold 11px Inter";
-  ctx.fillText("← Cutoff Threshold: Distance = 3.8 (Yields K=2 Clusters)", w - 380, cutY - 6);
+  ctx.fillText(`← Cutoff Threshold: d = ${cutThreshold} (Yields K=2 Natural Clusters)`, padLeft + 20, cutY - 6);
 
-  // Labels
+  // Labels & Subtree Legend
   ctx.fillStyle = "#38bdf8";
-  ctx.fillText("Cluster 0 Branch (Stop-Prone)", midA - 70, leafY + 25);
+  ctx.font = "11px Inter";
+  ctx.fillText("■ Cluster 0 Subtree (Stop-Prone Telemetry)", padLeft + 40, padTop + plotH + 28);
+
   ctx.fillStyle = "#f59e0b";
-  ctx.fillText("Cluster 1 Branch (Nominal)", midB - 60, leafY + 25);
+  ctx.fillText("■ Cluster 1 Subtree (Nominal Telemetry)", w - padRight - 260, padTop + plotH + 28);
+
+  // Y-axis label
+  ctx.save();
+  ctx.translate(16, h / 2 + 50);
+  ctx.rotate(-Math.PI / 2);
+  ctx.fillStyle = "#94a3b8";
+  ctx.font = "11px Inter";
+  ctx.fillText("Ward Linkage Euclidean Distance", 0, 0);
+  ctx.restore();
 }
 
 // -----------------------------------------------------------------------------

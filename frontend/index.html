@@ -217,7 +217,7 @@
             <div class="track-card-body">
               <h3>Classification Lab</h3>
               <p class="track-subtitle">Predict categories</p>
-              <p class="track-desc">Educational credit approval evaluator comparing 10 classifiers (6 active, 4 in development), side-by-side Model Face-Off, and ROC curves.</p>
+              <p class="track-desc">Educational credit approval evaluator comparing all 10 evaluated classifiers, side-by-side Model Face-Off, probability gauges, and ROC curves.</p>
               
               <div class="track-meta">
                 <div class="meta-item">
@@ -226,11 +226,11 @@
                 </div>
                 <div class="meta-item">
                   <small>Algorithms</small>
-                  <strong>10 Classifiers</strong>
+                  <strong>10 Evaluated</strong>
                 </div>
                 <div class="meta-item">
                   <small>Top Model</small>
-                  <strong class="text-accent">Random Forest (89.1% Acc)</strong>
+                  <strong class="text-accent">Tuned Random Forest (91.3% Acc)</strong>
                 </div>
               </div>
             </div>
@@ -285,8 +285,8 @@
               <span class="metric-title">Regression Benchmark (R²)</span>
               <span class="metric-badge-good">Best In Track</span>
             </div>
-            <div class="metric-value-huge text-accent">0.985</div>
-            <div class="metric-subtext">Random Forest Regressor (RMSE: 0.982 μg/m³)</div>
+            <div class="metric-value-huge text-accent" id="ovRegMetricVal">0.985</div>
+            <div class="metric-subtext" id="ovRegMetricSub">Random Forest Regressor (RMSE: 0.982 μg/m³)</div>
           </div>
 
           <div class="metric-card">
@@ -294,8 +294,8 @@
               <span class="metric-title">Classification ROC-AUC</span>
               <span class="metric-badge-good">Best In Track</span>
             </div>
-            <div class="metric-value-huge text-accent">0.961</div>
-            <div class="metric-subtext">Random Forest Classifier (Accuracy: 89.1%, F1: 0.892)</div>
+            <div class="metric-value-huge text-accent" id="ovClassMetricVal">0.967</div>
+            <div class="metric-subtext" id="ovClassMetricSub">Tuned Random Forest (Accuracy: 91.3%, F1: 0.913)</div>
           </div>
 
           <div class="metric-card">
@@ -303,8 +303,8 @@
               <span class="metric-title">Clustering Silhouette Score</span>
               <span class="metric-badge-good">Optimal (k=2)</span>
             </div>
-            <div class="metric-value-huge text-accent">0.3117</div>
-            <div class="metric-subtext">K-Means on 19 Sensor Signals (Calinski-H: 1997.1)</div>
+            <div class="metric-value-huge text-accent" id="ovClustMetricVal">0.3117</div>
+            <div class="metric-subtext" id="ovClustMetricSub">K-Means on 19 Sensor Signals (Calinski-H: 1997.1)</div>
           </div>
 
           <div class="metric-card">
@@ -312,8 +312,8 @@
               <span class="metric-title">Unsupervised Hazard Ratio</span>
               <span class="metric-badge-good">Post-Hoc Validated</span>
             </div>
-            <div class="metric-value-huge text-accent">2.44×</div>
-            <div class="metric-subtext">Cluster 0 (4.76% Stops) vs Cluster 1 (1.95% Stops)</div>
+            <div class="metric-value-huge text-accent" id="ovHazardMetricVal">2.44×</div>
+            <div class="metric-subtext" id="ovHazardMetricSub">Cluster 0 (4.76% Stops) vs Cluster 1 (1.95% Stops)</div>
           </div>
         </div>
 
@@ -1108,7 +1108,7 @@
                   <h3>Receiver Operating Characteristic (ROC)</h3>
                   <small class="text-muted">True Positive Rate vs False Positive Rate</small>
                 </div>
-                <span class="badge badge-accent">AUC: 0.962</span>
+                <span class="badge badge-accent" id="classRocBadge">AUC: 0.967</span>
               </div>
 
               <div class="chart-container">
